@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LANNA GRAPHIC DESIGN - ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#1E293B',
+                            dark: '#0F172A',
+                            light: '#334155'
+                        },
+                        slateblue: {
+                            DEFAULT: '#475569',
+                            light: '#64748B'
+                        },
+                        accent: {
+                            DEFAULT: '#6366F1', // Indigo / ม่วงอมฟ้า
+                            hover: '#4F46E5',
+                            light: '#EEF2FF'
+                        },
+                        surface: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'Prompt', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Kanit & Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', 'Prompt', sans-serif; }
+        .sr-focus:focus { outline: 3px solid #6366F1 !important; outline-offset: 3px !important; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-surface text-navy min-h-screen flex flex-col selection:bg-accent selection:text-white">
+
+    <!-- Accessibility Floating / Header Bar -->
+    <div id="accessibility-bar" class="bg-navy-dark text-white text-sm py-2 px-4 shadow-md sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-universal-access text-accent text-lg" aria-hidden="true"></i>
+                <span class="font-medium">ระบบช่วยอ่านสำหรับผู้พิการทางสายตา (Screen Reader):</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="btn-toggle-reader" onclick="toggleScreenReader()" class="bg-accent hover:bg-accent-hover text-white px-3 py-1 rounded-md text-xs font-medium transition flex items-center space-x-1 sr-focus" aria-label="เปิดหรือปิดโหมดช่วยอ่าน">
+                    <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
+                    <span id="reader-status-text">เปิดโหมดช่วยอ่าน</span>
+                </button>
+                <button id="btn-stop-speech" onclick="stopSpeech()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-md text-xs font-medium transition flex items-center space-x-1 sr-focus" aria-label="หยุดอ่านเสียง">
+                    <i class="fa-solid fa-stop" aria-hidden="true"></i>
+                    <span>หยุดอ่าน</span>
+                </button>
+                <button id="btn-repeat-speech" onclick="repeatLastSpeech()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-md text-xs font-medium transition flex items-center space-x-1 sr-focus" aria-label="อ่านซ้ำข้อความล่าสุด">
+                    <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+                    <span>อ่านซ้ำ</span>
+                </button>
+                <div id="speech-indicator" class="hidden items-center space-x-1 text-emerald-400 text-xs font-bold animate-pulse px-2 py-0.5 bg-emerald-950 rounded">
+                    <i class="fa-solid fa-waveform" aria-hidden="true"></i>
+                    <span>กำลังพูด...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header & Navigation -->
+    <header class="bg-white shadow-sm sticky top-[37px] z-45 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')" role="button" tabindex="0" aria-label="กลับสู่หน้าแรก ลานนากราฟฟิคดีไซน์" data-speak="หน้าแรก ลานนากราฟฟิคดีไซน์ ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-navy to-accent flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                        <i class="fa-solid fa-print"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-navy">LANNA GRAPHIC DESIGN</h1>
+                        <p class="text-xs text-slate-500 font-medium">ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2" aria-label="เมนูหลัก">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="เมนู หน้าแรก">หน้าแรก</button>
+                    <button onclick="switchTab('services')" id="nav-services" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-surface transition sr-focus" data-speak="เมนู บริการ">บริการ</button>
+                    <button onclick="switchTab('shop')" id="nav-shop" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-surface transition sr-focus" data-speak="เมนู ร้านค้า">ร้านค้า</button>
+                    <button onclick="switchTab('reviews')" id="nav-reviews" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-surface transition sr-focus" data-speak="เมนู รีวิว">รีวิว</button>
+                    <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-surface transition sr-focus" data-speak="เมนู ติดต่อเรา">ติดต่อเรา</button>
+                </nav>
+
+                <!-- Right Action Buttons (Cart & Mobile Toggle) -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="openCartModal()" class="relative bg-surface hover:bg-slate-200 text-navy p-3 rounded-xl transition flex items-center space-x-2 sr-focus" aria-label="ตะกร้าสินค้า" data-speak="ตะกร้าสินค้า มีสินค้าอยู่จำนวนศูนย์ชิ้น">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span class="hidden sm:inline font-medium text-sm">ตะกร้า</span>
+                        <span id="cart-badge" class="absolute -top-1 -right-1 bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-3 rounded-xl bg-surface hover:bg-slate-200 text-navy transition sr-focus" aria-label="เปิดเมนูย่อ" data-speak="ปุ่มเปิดเมนูหลัก">
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="หน้าแรก">หน้าแรก</button>
+            <button onclick="switchTab('services'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="บริการ">บริการ</button>
+            <button onclick="switchTab('shop'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="ร้านค้า">ร้านค้า</button>
+            <button onclick="switchTab('reviews'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="รีวิว">รีวิว</button>
+            <button onclick="switchTab('contact'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg font-medium text-navy hover:bg-surface transition sr-focus" data-speak="ติดต่อเรา">ติดต่อเรา</button>
+        </div>
+    </header>
+
+    <!-- Main Content Views -->
+    <main class="flex-grow">
+
+        <!-- TAB 1: HOME -->
+        <section id="tab-home" class="tab-content animate-fadeIn">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-br from-navy via-navy-light to-navy-dark text-white py-16 lg:py-24 overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#6366F1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                            <div class="inline-flex items-center space-x-2 bg-accent/20 border border-accent/30 px-3 py-1.5 rounded-full text-accent-light text-sm font-medium">
+                                <i class="fa-solid fa-award"></i>
+                                <span>ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่</span>
+                            </div>
+                            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                                เปลี่ยนไอเดียของคุณ <br><span class="text-accent">ให้กลายเป็นผลงานที่มีเอกลักษณ์</span>
+                            </h2>
+                            <p class="text-lg text-slate-300 max-w-2xl font-light leading-relaxed" data-speak="ลานนากราฟฟิคดีไซน์ ธุรกิจงานกราฟิกและงานสกรีนของศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่ มุ่งสร้างสรรค์ผลงานที่มีคุณภาพ ตอบโจทย์การใช้งาน และเปลี่ยนไอเดียของลูกค้าให้กลายเป็นสินค้าที่มีเอกลักษณ์">
+                                “ลานนากราฟฟิคดีไซน์ ธุรกิจงานกราฟิกและงานสกรีนของศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่ มุ่งสร้างสรรค์ผลงานที่มีคุณภาพ ตอบโจทย์การใช้งาน และเปลี่ยนไอเดียของลูกค้าให้กลายเป็นสินค้าที่มีเอกลักษณ์”
+                            </p>
+                            <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
+                                <button onclick="switchTab('shop')" class="bg-accent hover:bg-accent-hover text-white font-medium px-8 py-3.5 rounded-xl shadow-lg shadow-accent/30 transition flex items-center space-x-2 sr-focus" data-speak="ปุ่ม เลือกชมสินค้า">
+                                    <i class="fa-solid fa-store"></i>
+                                    <span>เลือกชมสินค้า</span>
+                                </button>
+                                <button onclick="switchTab('services')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium px-8 py-3.5 rounded-xl transition flex items-center space-x-2 sr-focus" data-speak="ปุ่ม ดูบริการของเรา">
+                                    <i class="fa-solid fa-list-check"></i>
+                                    <span>ดูบริการของเรา</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-5 flex justify-center">
+                            <div class="relative w-full max-w-md bg-white/5 p-4 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-sm">
+                                <img src="116260.jpg" alt="ภาพประชาสัมพันธ์ ลานนากราฟฟิคดีไซน์ สกรีนแก้ว สกรีนเสื้อ สกรีนกระเป๋า" class="rounded-2xl w-full h-auto object-cover shadow-lg" onerror="this.src='https://placehold.co/600x600/1E293B/FFFFFF?text=LANNA+GRAPHIC+DESIGN';">
+                                <div class="absolute -bottom-4 -right-4 bg-navy-dark text-white p-4 rounded-2xl shadow-xl border border-white/10 flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white text-lg">
+                                        <i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-slate-400">งานสวย คมชัด</p>
+                                        <p class="text-sm font-bold">คุณภาพเกินราคา</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Highlight Services -->
+            <div class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <h3 class="text-2xl sm:text-3xl font-bold text-navy">บริการเด่นของเรา</h3>
+                        <p class="text-slate-600 mt-2">บริการงานสกรีนและออกแบบกราฟิกครบวงจร โดยทีมงานมืออาชีพ</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-surface p-8 rounded-2xl border border-slate-100 hover:shadow-xl transition flex flex-col items-center text-center group">
+                            <div class="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center text-2xl mb-6 group-hover:bg-accent group-hover:text-white transition">
+                                <i class="fa-solid fa-shirt"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-navy mb-2">บริการสกรีนเสื้อ</h4>
+                            <p class="text-slate-600 text-sm mb-6">เสื้อสวย ใส่สบาย งานสกรีนคมชัด สีสด ทนนาน มีไซส์ครบครัน เริ่มต้นเพียง 199 บาท</p>
+                            <button onclick="openProductDetail('shirt')" class="mt-auto text-accent font-medium hover:underline flex items-center space-x-1 sr-focus" data-speak="ดูรายละเอียด สกรีนเสื้อ">
+                                <span>สั่งทำเสื้อสกรีน</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="bg-surface p-8 rounded-2xl border border-slate-100 hover:shadow-xl transition flex flex-col items-center text-center group">
+                            <div class="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center text-2xl mb-6 group-hover:bg-accent group-hover:text-white transition">
+                                <i class="fa-solid fa-mug-hot"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-navy mb-2">บริการสกรีนแก้วเซรามิก</h4>
+                            <p class="text-slate-600 text-sm mb-6">แก้วเซรามิกเนื้อดี พิมพ์ลายคมชัดสวยงาม เหมาะเป็นของฝากหรือของที่ระลึก ราคาเพียง 99 บาท</p>
+                            <button onclick="openProductDetail('mug')" class="mt-auto text-accent font-medium hover:underline flex items-center space-x-1 sr-focus" data-speak="ดูรายละเอียด สกรีนแก้วเซรามิก">
+                                <span>สั่งทำแก้วเซรามิก</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="bg-surface p-8 rounded-2xl border border-slate-100 hover:shadow-xl transition flex flex-col items-center text-center group">
+                            <div class="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center text-2xl mb-6 group-hover:bg-accent group-hover:text-white transition">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-navy mb-2">บริการสกรีนกระเป๋าผ้า</h4>
+                            <p class="text-slate-600 text-sm mb-6">กระเป๋าผ้าดิบหนา ลายสวยจุใจ มีทั้งขนาดเล็ก 99 บาท และขนาดใหญ่ 150 บาท สกรีนลายตามใจชอบ</p>
+                            <button onclick="openProductDetail('bag')" class="mt-auto text-accent font-medium hover:underline flex items-center space-x-1 sr-focus" data-speak="ดูรายละเอียด สกรีนกระเป๋าผ้า">
+                                <span>สั่งทำกระเป๋าผ้า</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SERVICES -->
+        <section id="tab-services" class="tab-content hidden py-12 animate-fadeIn">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-navy">บริการของเรา</h2>
+                    <p class="text-slate-600 mt-2">เลือกบริการงานสกรีนและออกแบบกราฟิกมาตรฐานมืออาชีพ</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Service 1 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/3 h-48 rounded-xl overflow-hidden bg-slate-100">
+                            <img src="116257_0.jpg" alt="บริการสกรีนเสื้อ" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/1E293B/FFFFFF?text=Shirt+Printing';">
+                        </div>
+                        <div class="w-full md:w-2/3 space-y-3">
+                            <div class="inline-block bg-accent/10 text-accent text-xs font-bold px-3 py-1 rounded-full">ยอดนิยม</div>
+                            <h3 class="text-2xl font-bold text-navy">บริการสกรีนเสื้อ</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">รับสกรีนเสื้อยืด เสื้อคู่ เสื้อทีม เสื้อองค์กร งานสกรีนคุณภาพ คมชัด สีสด ติดทนนาน เนื้อผ้าเกรดดีใส่สบาย มีไซส์ S ถึง 3XL เริ่มต้นเพียง 199 บาท</p>
+                            <button onclick="openProductDetail('shirt')" class="bg-navy hover:bg-navy-light text-white px-5 py-2.5 rounded-xl text-sm font-medium transition inline-flex items-center space-x-2 sr-focus" data-speak="เลือกสั่งทำเสื้อสกรีน">
+                                <i class="fa-solid fa-shirt"></i>
+                                <span>เลือกสั่งทำสินค้า</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/3 h-48 rounded-xl overflow-hidden bg-slate-100">
+                            <img src="116258_0.jpg" alt="บริการสกรีนแก้วเซรามิก" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/1E293B/FFFFFF?text=Ceramic+Mug';">
+                        </div>
+                        <div class="w-full md:w-2/3 space-y-3">
+                            <div class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">ของที่ระลึก</div>
+                            <h3 class="text-2xl font-bold text-navy">บริการสกรีนแก้วเซรามิก</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">แก้วเซรามิกเนื้อเนียนเรียบ ทนความร้อนสูง สามารถพิมพ์ลายภาพถ่าย โลโก้ หรือข้อความอวยพรได้ตามต้องการ เหมาะสำหรับเป็นของขวัญในโอกาสพิเศษ ราคาใบละ 99 บาท</p>
+                            <button onclick="openProductDetail('mug')" class="bg-navy hover:bg-navy-light text-white px-5 py-2.5 rounded-xl text-sm font-medium transition inline-flex items-center space-x-2 sr-focus" data-speak="เลือกสั่งทำแก้วเซรามิก">
+                                <i class="fa-solid fa-mug-hot"></i>
+                                <span>เลือกสั่งทำสินค้า</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/3 h-48 rounded-xl overflow-hidden bg-slate-100">
+                            <img src="116259_0.jpg" alt="บริการสกรีนกระเป๋าผ้า" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/1E293B/FFFFFF?text=Fabric+Bag';">
+                        </div>
+                        <div class="w-full md:w-2/3 space-y-3">
+                            <div class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">เป็นมิตรต่อสิ่งแวดล้อม</div>
+                            <h3 class="text-2xl font-bold text-navy">บริการสกรีนกระเป๋าผ้า</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">กระเป๋าผ้าดิบหนานุ่ม ทนทาน แข็งแรง มี 2 ขนาดให้เลือก (ขนาดเล็ก 99 บาท และขนาดใหญ่ 150 บาท) สกรีนลายกราฟิกเก๋ๆ ใช้สะพายไปเรียนหรือทำงานได้อย่างมั่นใจ</p>
+                            <button onclick="openProductDetail('bag')" class="bg-navy hover:bg-navy-light text-white px-5 py-2.5 rounded-xl text-sm font-medium transition inline-flex items-center space-x-2 sr-focus" data-speak="เลือกสั่งทำกระเป๋าผ้า">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                <span>เลือกสั่งทำสินค้า</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/3 h-48 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-900 to-navy flex items-center justify-content text-white text-center p-6 flex-col justify-center">
+                            <i class="fa-solid fa-pen-nib text-5xl text-accent mb-3"></i>
+                            <span class="font-bold text-lg">Graphic Design</span>
+                        </div>
+                        <div class="w-full md:w-2/3 space-y-3">
+                            <div class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">สร้างสรรค์</div>
+                            <h3 class="text-2xl font-bold text-navy">บริการออกแบบกราฟิก</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">บริการออกแบบโลโก้ นามบัตร ป้ายโฆษณา สื่อสิ่งพิมพ์ โพสเตอร์ และงานกราฟิกทุกชนิด โดยนักศึกษาและผู้เชี่ยวชาญจากศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่</p>
+                            <button onclick="switchTab('contact')" class="bg-navy hover:bg-navy-light text-white px-5 py-2.5 rounded-xl text-sm font-medium transition inline-flex items-center space-x-2 sr-focus" data-speak="ติดต่อเราเพื่อรับบริการออกแบบกราฟิก">
+                                <i class="fa-solid fa-headset"></i>
+                                <span>ติดต่อสอบถามบริการออกแบบ</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SHOP -->
+        <section id="tab-shop" class="tab-content hidden py-12 animate-fadeIn">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-navy">ร้านค้าออนไลน์</h2>
+                    <p class="text-slate-600 mt-2">เลือกสินค้าที่คุณต้องการ พร้อมระบบออกแบบและอัปโหลดภาพสกรีนได้ทันที</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Product 1: Shirt -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-100">
+                            <img src="116257_0.jpg" alt="เสื้อสกรีน" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/500x500/1E293B/FFFFFF?text=Printed+Shirt';">
+                            <span class="absolute top-3 left-3 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">ขายดี</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-navy mb-1">เสื้อสกรีนลายพิเศษ</h3>
+                            <p class="text-slate-500 text-sm mb-4">เนื้อผ้าเกรดดี ใส่สบาย สกรีนลายตามใจชอบ</p>
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                                <div>
+                                    <span class="text-xs text-slate-400">เริ่มต้น</span>
+                                    <p class="text-xl font-bold text-accent">199 บาท</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="openProductDetail('shirt')" class="bg-surface hover:bg-slate-200 text-navy px-3 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ดูรายละเอียดเสื้อสกรีน" data-speak="ดูรายละเอียด เสื้อสกรีน">รายละเอียด</button>
+                                    <button onclick="openProductDetail('shirt')" class="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ออกแบบเสื้อสกรีน" data-speak="ออกแบบสินค้าของคุณ เสื้อสกรีน">ออกแบบ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2: Mug -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-100">
+                            <img src="116258_0.jpg" alt="แก้วเซรามิก" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/500x500/1E293B/FFFFFF?text=Ceramic+Mug';">
+                            <span class="absolute top-3 left-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">ยอดฮิต</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-navy mb-1">แก้วเซรามิก</h3>
+                            <p class="text-slate-500 text-sm mb-4">แก้วเซรามิกเนื้อเนียน พิมพ์ลายคมชัดสวยงาม</p>
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                                <div>
+                                    <span class="text-xs text-slate-400">ราคาต่อใบ</span>
+                                    <p class="text-xl font-bold text-accent">99 บาท</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="openProductDetail('mug')" class="bg-surface hover:bg-slate-200 text-navy px-3 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ดูรายละเอียดแก้วเซรามิก" data-speak="ดูรายละเอียด แก้วเซรามิก">รายละเอียด</button>
+                                    <button onclick="openProductDetail('mug')" class="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ออกแบบแก้วเซรามิก" data-speak="ออกแบบสินค้าของคุณ แก้วเซรามิก">ออกแบบ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3: Fabric Bag Small -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-100">
+                            <img src="116259_0.jpg" alt="กระเป๋าผ้าขนาดเล็ก" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/500x500/1E293B/FFFFFF?text=Fabric+Bag';">
+                            <span class="absolute top-3 left-3 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">ขนาดเล็ก</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-navy mb-1">กระเป๋าผ้าขนาดเล็ก</h3>
+                            <p class="text-slate-500 text-sm mb-4">กระเป๋าผ้าดิบลายสวย ขนาด 45x40 เซนติเมตร</p>
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                                <div>
+                                    <span class="text-xs text-slate-400">ราคาต่อใบ</span>
+                                    <p class="text-xl font-bold text-accent">99 บาท</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="openProductDetail('bag')" class="bg-surface hover:bg-slate-200 text-navy px-3 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ดูรายละเอียดกระเป๋าผ้าขนาดเล็ก" data-speak="ดูรายละเอียด กระเป๋าผ้าขนาดเล็ก">รายละเอียด</button>
+                                    <button onclick="openProductDetail('bag')" class="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ออกแบบกระเป๋าผ้าขนาดเล็ก" data-speak="ออกแบบสินค้าของคุณ กระเป๋าผ้าขนาดเล็ก">ออกแบบ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 4: Fabric Bag Large -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-100">
+                            <img src="116259_0.jpg" alt="กระเป๋าผ้าขนาดใหญ่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/500x500/1E293B/FFFFFF?text=Fabric+Bag+Large';">
+                            <span class="absolute top-3 left-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">ขนาดใหญ่</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-navy mb-1">กระเป๋าผ้าขนาดใหญ่</h3>
+                            <p class="text-slate-500 text-sm mb-4">กระเป๋าผ้าดิบใบใหญ่ จุเยอะ ขนาด 55x48 เซนติเมตร</p>
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                                <div>
+                                    <span class="text-xs text-slate-400">ราคาต่อใบ</span>
+                                    <p class="text-xl font-bold text-accent">150 บาท</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="openProductDetail('bag')" class="bg-surface hover:bg-slate-200 text-navy px-3 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ดูรายละเอียดกระเป๋าผ้าขนาดใหญ่" data-speak="ดูรายละเอียด กระเป๋าผ้าขนาดใหญ่">รายละเอียด</button>
+                                    <button onclick="openProductDetail('bag')" class="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-xl text-sm font-medium transition sr-focus" aria-label="ออกแบบกระเป๋าผ้าขนาดใหญ่" data-speak="ออกแบบสินค้าของคุณ กระเป๋าผ้าขนาดใหญ่">ออกแบบ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: REVIEWS -->
+        <section id="tab-reviews" class="tab-content hidden py-12 animate-fadeIn">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-navy">ความคิดเห็นและรีวิวจากลูกค้า</h2>
+                    <p class="text-slate-600 mt-2">ความประทับใจจากผู้รับบริการจริง</p>
+                </div>
+
+                <div class="bg-white p-12 rounded-3xl border border-slate-100 shadow-sm text-center space-y-4">
+                    <div class="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy" data-speak="ยังไม่มีรีวิวจากลูกค้าในขณะนี้">ยังไม่มีรีวิวจากลูกค้าในขณะนี้</h3>
+                    <p class="text-slate-500 text-sm max-w-md mx-auto">ขณะนี้ยังไม่มีรีวิวจากลูกค้า ท่านสามารถสั่งซื้อสินค้าหรือใช้บริการ แล้วร่วมแสดงความคิดเห็นได้เร็วๆ นี้</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: CONTACT -->
+        <section id="tab-contact" class="tab-content hidden py-12 animate-fadeIn">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-navy">ติดต่อเรา</h2>
+                    <p class="text-slate-600 mt-2">ช่องทางการติดต่อศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- LANNA GRAPHIC DESIGN INFO -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex items-center space-x-3 border-b border-slate-100 pb-4">
+                            <div class="w-12 h-12 rounded-xl bg-accent text-white flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-print"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-navy" data-speak="ลานนากราฟฟิคดีไซน์">LANNA GRAPHIC DESIGN</h3>
+                                <p class="text-xs text-slate-500">ศูนย์สกรีนและออกแบบกราฟิก</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-accent mt-1 flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">เบอร์โทรศัพท์ร้าน</p>
+                                    <a href="tel:0993839985" class="text-lg font-bold text-navy hover:text-accent transition sr-focus" data-speak="เบอร์โทรศัพท์ 099 383 9985">099-383-9985</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-accent mt-1 flex-shrink-0">
+                                    <i class="fa-brands fa-facebook"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">เฟซบุ๊ก (Facebook)</p>
+                                    <a href="https://www.facebook.com/share/1EZeGGjWCb/" target="_blank" rel="noopener noreferrer" class="text-base font-medium text-accent hover:underline break-all sr-focus" data-speak="ลิงก์เฟซบุ๊ก ลานนากราฟฟิคดีไซน์">
+                                        https://www.facebook.com/share/1EZeGGjWCb/
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chiang Mai Polytechnic College INFO -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex items-center space-x-3 border-b border-slate-100 pb-4">
+                            <div class="w-12 h-12 rounded-xl bg-navy text-white flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-school"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-navy" data-speak="วิทยาลัยสารพัดช่างเชียงใหม่">วิทยาลัยสารพัดช่างเชียงใหม่</h3>
+                                <p class="text-xs text-slate-500">ศูนย์บ่มเพาะผู้ประกอบการ</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-navy mt-1 flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">เบอร์โทรศัพท์วิทยาลัย</p>
+                                    <a href="tel:053211592" class="text-lg font-bold text-navy hover:text-accent transition sr-focus" data-speak="เบอร์โทรศัพท์วิทยาลัย 053 211 592">053-211-592</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-navy mt-1 flex-shrink-0">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">แผนที่ Google Maps</p>
+                                    <a href="https://www.google.com/maps/place/?q=place_id:ChIJR7mv-2A62jARDtJYfm0sm1c" target="_blank" rel="noopener noreferrer" class="text-base font-medium text-accent hover:underline sr-focus" data-speak="ลิงก์แผนที่ Google Maps วิทยาลัยสารพัดช่างเชียงใหม่">
+                                        เปิดดูตำแหน่งบน Google Maps
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PRODUCT DETAIL & CUSTOMIZER MODAL -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100 animate-scaleUp">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between z-10">
+                <h3 id="modal-product-title" class="text-2xl font-bold text-navy">ปรับแต่งและสั่งทำสินค้า</h3>
+                <button onclick="closeProductModal()" class="w-10 h-10 rounded-full bg-surface hover:bg-slate-200 text-navy flex items-center justify-center transition sr-focus" aria-label="ปิดหน้าต่าง" data-speak="ปุ่มปิดหน้าต่าง">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <!-- Product Preview Image -->
+                <div class="bg-surface p-4 rounded-2xl border border-slate-200 flex flex-col items-center justify-center relative">
+                    <div class="relative w-full h-64 flex items-center justify-center overflow-hidden rounded-xl bg-white shadow-inner">
+                        <img id="modal-product-img" src="" alt="ภาพสินค้าตัวอย่าง" class="max-h-full max-w-full object-contain">
+                        <!-- Custom Uploaded Image Overlay Mockup -->
+                        <div id="uploaded-overlay-container" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+                            <div class="border-2 border-dashed border-accent/80 bg-white/80 p-2 rounded shadow max-w-[50%] max-h-[50%] overflow-hidden flex items-center justify-center">
+                                <img id="modal-uploaded-preview" src="" alt="ภาพสกรีนที่อัปโหลด" class="max-h-32 object-contain">
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-xs text-slate-400 mt-2">* ภาพจำลองตำแหน่งสกรีนบนสินค้าเพื่อเป็นตัวอย่างเท่านั้น</span>
+                </div>
+
+                <!-- Product Configuration Options -->
+                <div class="space-y-4">
+                    <div id="option-size-container">
+                        <label class="block text-sm font-bold text-navy mb-2">เลือกขนาดสินค้า:</label>
+                        <div id="size-options-grid" class="flex flex-wrap gap-2">
+                            <!-- JS injected sizes -->
+                        </div>
+                    </div>
+
+                    <div id="option-quantity-container">
+                        <label class="block text-sm font-bold text-navy mb-2">ระบุจำนวน:</label>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="adjustQuantity(-1)" class="w-10 h-10 rounded-xl bg-surface hover:bg-slate-200 font-bold text-navy flex items-center justify-center transition sr-focus" aria-label="ลดจำนวน">-</button>
+                            <input type="number" id="input-quantity" value="1" min="1" max="1000" class="w-20 text-center py-2 border border-slate-300 rounded-xl font-bold text-navy focus:outline-none focus:border-accent" onchange="calculateModalTotal()">
+                            <button onclick="adjustQuantity(1)" class="w-10 h-10 rounded-xl bg-surface hover:bg-slate-200 font-bold text-navy flex items-center justify-center transition sr-focus" aria-label="เพิ่มจำนวน">+</button>
+                            <span class="text-sm text-slate-500" id="unit-label">ชิ้น</span>
+                        </div>
+                    </div>
+
+                    <!-- File Upload System -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-navy">อัปโหลดภาพที่ต้องการสกรีน (JPG, JPEG, PNG):</label>
+                        <div class="flex flex-col sm:flex-row items-center gap-3">
+                            <label class="w-full sm:w-auto cursor-pointer bg-surface hover:bg-slate-200 border border-slate-300 text-navy px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-center space-x-2 sr-focus" data-speak="ปุ่มเลือกไฟล์ภาพเพื่อสกรีน">
+                                <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+                                <span id="upload-file-label">เลือกไฟล์ภาพ...</span>
+                                <input type="file" id="file-upload-input" accept=".jpg, .jpeg, .png" class="hidden" onchange="handleImageUpload(event)">
+                            </label>
+                            <button id="btn-remove-upload" onclick="removeUploadedImage()" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-3 py-2 rounded-xl transition flex items-center space-x-1 sr-focus" data-speak="ปุ่มลบภาพที่อัปโหลด">
+                                <i class="fa-solid fa-trash"></i>
+                                <span>ลบภาพออก</span>
+                            </button>
+                        </div>
+                        <p id="upload-error-msg" class="text-red-600 text-xs hidden"></p>
+                        <p class="text-xs text-slate-400" id="storage-status-note">สถานะระบบจัดเก็บ: ภาพที่อัปโหลดถูกเก็บไว้ชั่วคราวในหน่วยความจำเบราว์เซอร์เพื่อใช้ในการออกแบบและสั่งทำ</p>
+                    </div>
+
+                    <!-- Price Calculation Summary -->
+                    <div class="bg-surface p-4 rounded-2xl border border-slate-200 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-500">ราคาต่อชิ้น: <span id="display-unit-price" class="font-bold text-navy">199</span> บาท</p>
+                            <p class="text-sm font-bold text-navy mt-1">ราคารวมทั้งสิ้น:</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="display-total-price" class="text-2xl font-bold text-accent">199</span>
+                            <span class="text-sm font-bold text-accent ml-1">บาท</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex items-center justify-end space-x-3 z-10">
+                <button onclick="closeProductModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-navy hover:bg-surface text-sm font-medium transition sr-focus" data-speak="ปุ่มยกเลิก">ยกเลิก</button>
+                <button onclick="addToCart()" class="bg-accent hover:bg-accent-hover text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-md shadow-accent/30 transition flex items-center space-x-2 sr-focus" data-speak="ปุ่มเพิ่มลงตะกร้าสินค้า">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span>เพิ่มลงตะกร้าสินค้า</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOPPING CART MODAL -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100 animate-scaleUp">
+            <div class="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between z-10">
+                <h3 class="text-2xl font-bold text-navy flex items-center space-x-2">
+                    <i class="fa-solid fa-cart-shopping text-accent"></i>
+                    <span>ตะกร้าสินค้าของคุณ</span>
+                </h3>
+                <button onclick="closeCartModal()" class="w-10 h-10 rounded-full bg-surface hover:bg-slate-200 text-navy flex items-center justify-center transition sr-focus" aria-label="ปิดตะกร้าสินค้า" data-speak="ปุ่มปิดตะกร้าสินค้า">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div id="cart-items-container" class="space-y-4 divide-y divide-slate-100">
+                    <!-- Cart items injected via JS -->
+                </div>
+
+                <div id="cart-empty-state" class="text-center py-12 space-y-3">
+                    <div class="w-16 h-16 bg-surface text-slate-400 rounded-full flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-cart-arrow-down"></i>
+                    </div>
+                    <p class="text-navy font-bold text-lg" data-speak="ตะกร้าสินค้าว่างเปล่า">ไม่มีสินค้าในตะกร้าของคุณ</p>
+                    <p class="text-slate-500 text-sm">เลือกชมสินค้าและเพิ่มรายการที่ต้องการลงในตะกร้าได้เลยครับ</p>
+                </div>
+
+                <!-- Cart Summary -->
+                <div id="cart-summary-box" class="bg-surface p-6 rounded-2xl border border-slate-200 space-y-3 hidden">
+                    <div class="flex justify-between text-sm text-slate-600">
+                        <span>ค่าจัดส่งสินค้า:</span>
+                        <span class="font-medium text-navy">ยังไม่รวมค่าจัดส่ง (แจ้งให้ทราบก่อนยืนยันรายการ)</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-300">
+                        <span class="font-bold text-lg text-navy">ยอดรวมสินค้าทั้งหมด:</span>
+                        <span id="cart-grand-total" class="text-2xl font-bold text-accent">0 บาท</span>
+                    </div>
+                    <p class="text-xs text-slate-400">* หมายเหตุ: ระบบยังไม่มีการหักชำระเงินออนไลน์อัตโนมัติ กรุณายืนยันรายการเพื่อติดต่อทางร้านผ่านช่องทางติดต่อ</p>
+                </div>
+            </div>
+
+            <div class="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex items-center justify-between z-10">
+                <button onclick="closeCartModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-navy hover:bg-surface text-sm font-medium transition sr-focus" data-speak="ปุ่มกลับไปเลือกซื้อสินค้าต่อ">เลือกซื้อสินค้าต่อ</button>
+                <button id="btn-checkout" onclick="checkoutOrder()" class="bg-accent hover:bg-accent-hover text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-md shadow-accent/30 transition hidden sr-focus" data-speak="ปุ่มยืนยันคำสั่งซื้อสินค้า">
+                    <i class="fa-solid fa-check"></i>
+                    <span>ยืนยันคำสั่งซื้อ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-navy-dark text-white pt-12 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-slate-800 pb-8">
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold">LANNA GRAPHIC DESIGN</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed" data-speak="ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่ บริการงานสกรีนและออกแบบกราฟิกครบวงจร">
+                        ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่ บริการงานสกรีนและออกแบบกราฟิกครบวงจร งานสวย คมชัด คุณภาพเกินราคา
+                    </p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-accent">เมนูหลัก</h4>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><button onclick="switchTab('home')" class="hover:text-white transition sr-focus" data-speak="ลิงก์ไปหน้าแรก">หน้าแรก</button></li>
+                        <li><button onclick="switchTab('services')" class="hover:text-white transition sr-focus" data-speak="ลิงก์ไปหน้าบริการ">บริการ</button></li>
+                        <li><button onclick="switchTab('shop')" class="hover:text-white transition sr-focus" data-speak="ลิงก์ไปหน้าร้านค้า">ร้านค้า</button></li>
+                        <li><button onclick="switchTab('reviews')" class="hover:text-white transition sr-focus" data-speak="ลิงก์ไปหน้ารีวิว">รีวิว</button></li>
+                        <li><button onclick="switchTab('contact')" class="hover:text-white transition sr-focus" data-speak="ลิงก์ไปหน้าติดต่อเรา">ติดต่อเรา</button></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-accent">ข้อมูลติดต่อ</h4>
+                    <p class="text-sm text-slate-300" data-speak="โทรศัพท์ 099 383 9985">โทรศัพท์: 099-383-9985</p>
+                    <p class="text-sm text-slate-300" data-speak="วิทยาลัยสารพัดช่างเชียงใหม่ โทรศัพท์ 053 211 592">วิทยาลัยสารพัดช่างเชียงใหม่: 053-211-592</p>
+                    <div class="flex space-x-3 pt-2">
+                        <a href="https://www.facebook.com/share/1EZeGGjWCb/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-accent text-white flex items-center justify-center transition sr-focus" aria-label="เฟซบุ๊ก" data-speak="เฟซบุ๊ก ลานนากราฟฟิคดีไซน์">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 LANNA GRAPHIC DESIGN. ศูนย์บ่มเพาะผู้ประกอบการ วิทยาลัยสารพัดช่างเชียงใหม่ สงวนลิขสิทธิ์ทั้งหมด</p>
+                <p class="mt-2 sm:mt-0">พัฒนาเพื่อการเข้าถึงอย่างเท่าเทียมและรองรับผู้พิการทางสายตา</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application JavaScript -->
+    <script>
+        let currentTab = 'home';
+        let cart = [];
+        let isScreenReaderActive = false;
+        let currentUtterance = null;
+        let thaiVoice = null;
+
+        // Current product modal state
+        let activeProduct = {
+            id: '',
+            name: '',
+            basePrice: 0,
+            image: '',
+            sizes: [],
+            selectedSize: '',
+            quantity: 1,
+            uploadedImage: null,
+            uploadedImageName: ''
+        };
+
+        const productCatalog = {
+            shirt: {
+                id: 'shirt',
+                name: 'เสื้อสกรีนลายพิเศษ',
+                basePrice: 199,
+                image: '116257_0.jpg',
+                sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL']
+            },
+            mug: {
+                id: 'mug',
+                name: 'แก้วเซรามิก',
+                basePrice: 99,
+                image: '116258_0.jpg',
+                sizes: ['มาตรฐาน']
+            },
+            bag: {
+                id: 'bag',
+                name: 'กระเป๋าผ้า',
+                basePrice: 99,
+                image: '116259_0.jpg',
+                sizes: ['ขนาดเล็ก (45x40cm) - 99 บาท', 'ขนาดใหญ่ (55x48cm) - 150 บาท']
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSpeechSynthesis();
+            setupEventListeners();
+        });
+
+        function initSpeechSynthesis() {
+            if ('speechSynthesis' in window) {
+                loadThaiVoice();
+                window.speechSynthesis.onvoiceschanged = loadThaiVoice;
+            }
+        }
+
+        function loadThaiVoice() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            // Find Thai voice
+            thaiVoice = voices.find(v => v.lang === 'th-TH' || v.lang.startsWith('th')) || voices.find(v => v.lang.includes('th')) || null;
+        }
+
+        function speakText(text) {
+            if (!isScreenReaderActive || !text || !('speechSynthesis' in window)) return;
+            
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'th-TH';
+            if (thaiVoice) {
+                utterance.voice = thaiVoice;
+            }
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+
+            utterance.onstart = () => {
+                const indicator = document.getElementById('speech-indicator');
+                if (indicator) indicator.classList.remove('hidden');
+                indicator.classList.add('flex');
+            };
+
+            utterance.onend = () => {
+                const indicator = document.getElementById('speech-indicator');
+                if (indicator) {
+                    indicator.classList.remove('flex');
+                    indicator.classList.add('hidden');
+                }
+            };
+
+            utterance.onerror = () => {
+                const indicator = document.getElementById('speech-indicator');
+                if (indicator) {
+                    indicator.classList.remove('flex');
+                    indicator.classList.add('hidden');
+                }
+            };
+
+            currentUtterance = utterance;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const indicator = document.getElementById('speech-indicator');
+                if (indicator) {
+                    indicator.classList.remove('flex');
+                    indicator.classList.add('hidden');
+                }
+            }
+        }
+
+        function repeatLastSpeech() {
+            if (currentUtterance && isScreenReaderActive) {
+                window.speechSynthesis.speak(currentUtterance);
+            } else {
+                speakText("ยินดีต้อนรับสู่ ลานนากราฟฟิคดีไซน์");
+            }
+        }
+
+        function toggleScreenReader() {
+            isScreenReaderActive = !isScreenReaderActive;
+            const btnText = document.getElementById('reader-status-text');
+            const bar = document.getElementById('accessibility-bar');
+
+            if (isScreenReaderActive) {
+                btnText.textContent = "ปิดโหมดช่วยอ่าน";
+                bar.classList.add('ring-2', 'ring-accent');
+                speakText("เปิดโหมดช่วยอ่านภาษาไทยเรียบร้อยแล้ว คลิกหรือเลือกส่วนใดของเว็บไซต์เพื่อฟังเสียงอ่าน");
+            } else {
+                btnText.textContent = "เปิดโหมดช่วยอ่าน";
+                bar.classList.remove('ring-2', 'ring-accent');
+                stopSpeech();
+            }
+        }
+
+        function setupEventListeners() {
+            // Add event listeners for click and focus across interactive elements for Screen Reader
+            document.addEventListener('click', (e) => {
+                if (!isScreenReaderActive) return;
+                const target = e.target.closest('[data-speak], button, a, input, select, h1, h2, h3, h4');
+                if (target) {
+                    let textToSpeak = target.getAttribute('data-speak') || target.innerText || target.getAttribute('aria-label');
+                    if (textToSpeak && textToSpeak.trim().length > 0) {
+                        speakText(textToSpeak.trim());
+                    }
+                }
+            });
+
+            document.addEventListener('focusin', (e) => {
+                if (!isScreenReaderActive) return;
+                const target = e.target.closest('[data-speak], button, a, input, select');
+                if (target) {
+                    let textToSpeak = target.getAttribute('data-speak') || target.innerText || target.getAttribute('aria-label');
+                    if (textToSpeak && textToSpeak.trim().length > 0) {
+                        speakText(textToSpeak.trim());
+                    }
+                }
+            });
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const tabs = ['home', 'services', 'shop', 'reviews', 'contact'];
+            
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (el) {
+                    if (t === tabId) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                }
+                if (navBtn) {
+                    if (t === tabId) {
+                        navBtn.classList.add('bg-surface', 'text-accent');
+                        navBtn.classList.remove('text-slate-600');
+                    } else {
+                        navBtn.classList.remove('bg-surface', 'text-accent');
+                        navBtn.classList.add('text-slate-600');
+                    }
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Speak tab change
+            const tabNames = {
+                home: "หน้าแรก",
+                services: "บริการ",
+                shop: "ร้านค้า",
+                reviews: "รีวิว",
+                contact: "ติดต่อเรา"
+            };
+            if (isScreenReaderActive) {
+                speakText(`เปิดหน้า ${tabNames[tabId]}`);
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+                if (isScreenReaderActive) speakText("เปิดเมนูย่อ");
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+                if (isScreenReaderActive) speakText("ปิดเมนูย่อ");
+            }
+        }
+
+        function openProductDetail(productId) {
+            const prod = productCatalog[productId];
+            if (!prod) return;
+
+            activeProduct = {
+                id: prod.id,
+                name: prod.name,
+                basePrice: prod.basePrice,
+                image: prod.image,
+                sizes: [...prod.sizes],
+                selectedSize: prod.sizes[0],
+                quantity: 1,
+                uploadedImage: null,
+                uploadedImageName: ''
+            };
+
+            document.getElementById('modal-product-title').textContent = prod.name;
+            document.getElementById('modal-product-img').src = prod.image;
+            document.getElementById('input-quantity').value = 1;
+            
+            // Reset upload UI
+            document.getElementById('upload-file-label').textContent = "เลือกไฟล์ภาพ...";
+            document.getElementById('btn-remove-upload').classList.add('hidden');
+            document.getElementById('uploaded-overlay-container').classList.add('hidden');
+            document.getElementById('upload-error-msg').classList.add('hidden');
+
+            // Render Size Options
+            const sizeGrid = document.getElementById('size-options-grid');
+            sizeGrid.innerHTML = '';
+            
+            if (prod.id === 'bag') {
+                // Fabric bag sizing options
+                prod.sizes.forEach((sz, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `px-4 py-2 rounded-xl border text-sm font-medium transition sr-focus ${idx === 0 ? 'border-accent bg-accent/10 text-accent font-bold' : 'border-slate-300 bg-white text-navy hover:bg-surface'}`;
+                    btn.textContent = sz;
+                    btn.setAttribute('data-speak', `เลือกขนาด ${sz}`);
+                    btn.onclick = () => {
+                        document.querySelectorAll('#size-options-grid button').forEach(b => {
+                            b.className = 'px-4 py-2 rounded-xl border border-slate-300 bg-white text-navy hover:bg-surface text-sm font-medium transition sr-focus';
+                        });
+                        btn.className = 'px-4 py-2 rounded-xl border border-accent bg-accent/10 text-accent font-bold text-sm transition sr-focus';
+                        activeProduct.selectedSize = sz;
+                        // Determine price based on size
+                        if (sz.includes('ขนาดใหญ่')) {
+                            activeProduct.basePrice = 150;
+                        } else {
+                            activeProduct.basePrice = 99;
+                        }
+                        calculateModalTotal();
+                    };
+                    sizeGrid.appendChild(btn);
+                });
+                activeProduct.basePrice = 99;
+            } else if (prod.sizes.length > 1) {
+                prod.sizes.forEach((sz, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `px-4 py-2 rounded-xl border text-sm font-medium transition sr-focus ${idx === 0 ? 'border-accent bg-accent/10 text-accent font-bold' : 'border-slate-300 bg-white text-navy hover:bg-surface'}`;
+                    btn.textContent = `ไซส์ ${sz}`;
+                    btn.setAttribute('data-speak', `เลือกไซส์ ${sz}`);
+                    btn.onclick = () => {
+                        document.querySelectorAll('#size-options-grid button').forEach(b => {
+                            b.className = 'px-4 py-2 rounded-xl border border-slate-300 bg-white text-navy hover:bg-surface text-sm font-medium transition sr-focus';
+                        });
+                        btn.className = 'px-4 py-2 rounded-xl border border-accent bg-accent/10 text-accent font-bold text-sm transition sr-focus';
+                        activeProduct.selectedSize = sz;
+                        calculateModalTotal();
+                    };
+                    sizeGrid.appendChild(btn);
+                });
+            } else {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'px-4 py-2 rounded-xl border border-accent bg-accent/10 text-accent font-bold text-sm';
+                btn.textContent = prod.sizes[0];
+                sizeGrid.appendChild(btn);
+            }
+
+            calculateModalTotal();
+            document.getElementById('product-modal').classList.remove('hidden');
+            if (isScreenReaderActive) {
+                speakText(`เปิดหน้าต่างปรับแต่งสินค้า ${prod.name}`);
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+            if (isScreenReaderActive) speakText("ปิดหน้าต่างปรับแต่งสินค้า");
+        }
+
+        function adjustQuantity(delta) {
+            let qty = parseInt(document.getElementById('input-quantity').value) || 1;
+            qty += delta;
+            if (qty < 1) qty = 1;
+            if (qty > 1000) qty = 1000;
+            document.getElementById('input-quantity').value = qty;
+            calculateModalTotal();
+        }
+
+        function calculateModalTotal() {
+            const qty = parseInt(document.getElementById('input-quantity').value) || 1;
+            activeProduct.quantity = qty;
+            const unitPrice = activeProduct.basePrice;
+            const total = unitPrice * qty;
+
+            document.getElementById('display-unit-price').textContent = unitPrice;
+            document.getElementById('display-total-price').textContent = total.toLocaleString();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            const errorEl = document.getElementById('upload-error-msg');
+            errorEl.classList.add('hidden');
+            errorEl.textContent = '';
+
+            if (!file) return;
+
+            // Validate file type (JPG, JPEG, PNG)
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                errorEl.textContent = "ขออภัย รองรับเฉพาะไฟล์ภาพประเภท JPG, JPEG และ PNG เท่านั้นครับ";
+                errorEl.classList.remove('hidden');
+                if (isScreenReaderActive) speakText("ข้อผิดพลาด รองรับเฉพาะไฟล์ภาพประเภท เจพีจี หรือ พีเอ็นจี เท่านั้น");
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                errorEl.textContent = "ขนาดไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ที่มีขนาดไม่เกิน 5 เมกะไบต์";
+                errorEl.classList.remove('hidden');
+                if (isScreenReaderActive) speakText("ข้อผิดพลาด ขนาดไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ที่ไม่เกิน 5 เมกะไบต์");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                activeProduct.uploadedImage = e.target.result;
+                activeProduct.uploadedImageName = file.name;
+
+                // Update UI
+                document.getElementById('upload-file-label').textContent = file.name;
+                document.getElementById('btn-remove-upload').classList.remove('hidden');
+                
+                const previewImg = document.getElementById('modal-uploaded-preview');
+                previewImg.src = e.target.result;
+                document.getElementById('uploaded-overlay-container').classList.remove('hidden');
+
+                if (isScreenReaderActive) {
+                    speakText(`อัปโหลดไฟล์ภาพ ${file.name} สำเร็จและแสดงตัวอย่างทันที`);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeUploadedImage() {
+            activeProduct.uploadedImage = null;
+            activeProduct.uploadedImageName = '';
+            document.getElementById('file-upload-input').value = '';
+            document.getElementById('upload-file-label').textContent = "เลือกไฟล์ภาพ...";
+            document.getElementById('btn-remove-upload').classList.add('hidden');
+            document.getElementById('uploaded-overlay-container').classList.add('hidden');
+            if (isScreenReaderActive) speakText("ลบภาพที่อัปโหลดออกแล้ว");
+        }
+
+        function addToCart() {
+            const cartItem = {
+                id: Date.now(),
+                productId: activeProduct.id,
+                name: activeProduct.name,
+                size: activeProduct.selectedSize,
+                quantity: activeProduct.quantity,
+                unitPrice: activeProduct.basePrice,
+                totalPrice: activeProduct.basePrice * activeProduct.quantity,
+                image: activeProduct.image,
+                uploadedImage: activeProduct.uploadedImage,
+                uploadedImageName: activeProduct.uploadedImageName
+            };
+
+            cart.push(cartItem);
+            updateCartBadge();
+            closeProductModal();
+
+            // Show success notification or speak
+            if (isScreenReaderActive) {
+                speakText(`เพิ่มสินค้า ${cartItem.name} จำนวน ${cartItem.quantity} ชิ้น ลงในตะกร้าเรียบร้อยแล้ว`);
+            } else {
+                alertCustom(`เพิ่มสินค้าลงในตะกร้าเรียบร้อยแล้วครับ`);
+            }
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+        }
+
+        function openCartModal() {
+            renderCartItems();
+            document.getElementById('cart-modal').classList.remove('hidden');
+            if (isScreenReaderActive) {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                speakText(`เปิดตะกร้าสินค้า มีสินค้าทั้งหมด ${totalItems} ชิ้น`);
+            }
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+            if (isScreenReaderActive) speakText("ปิดตะกร้าสินค้า");
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const emptyState = document.getElementById('cart-empty-state');
+            const summaryBox = document.getElementById('cart-summary-box');
+            const checkoutBtn = document.getElementById('btn-checkout');
+
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                emptyState.classList.remove('hidden');
+                summaryBox.classList.add('hidden');
+                checkoutBtn.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            summaryBox.classList.remove('hidden');
+            checkoutBtn.classList.remove('hidden');
+
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                grandTotal += item.totalPrice;
+
+                const div = document.createElement('div');
+                div.className = 'py-4 flex flex-col sm:flex-row items-center justify-between gap-4';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-4 w-full sm:w-auto">
+                        <div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 relative">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                            ${item.uploadedImage ? `<div class="absolute inset-0 bg-black/30 flex items-center justify-center"><i class="fa-solid fa-image text-white text-xs"></i></div>` : ''}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-navy">${item.name}</h4>
+                            <p class="text-xs text-slate-500">ขนาด/ไซส์: ${item.size}</p>
+                            ${item.uploadedImageName ? `<p class="text-xs text-accent font-medium">ภาพสกรีน: ${item.uploadedImageName}</p>` : '<p class="text-xs text-slate-400">ไม่มีภาพสกรีนเพิ่มเติม</p>'}
+                            <p class="text-xs text-slate-500 mt-1">ราคาต่อชิ้น: ${item.unitPrice} บาท</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end space-x-4 w-full sm:w-auto">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-slate-400">จำนวน:</span>
+                            <span class="font-bold text-navy">${item.quantity}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold text-accent text-lg">${item.totalPrice.toLocaleString()} บาท</span>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 p-2 rounded-lg transition sr-focus" aria-label="ลบสินค้าออกจากตะกร้า" data-speak="ลบสินค้า ${item.name} ออกจากตะกร้า">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('cart-grand-total').textContent = grandTotal.toLocaleString() + ' บาท';
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartBadge();
+            renderCartItems();
+            if (isScreenReaderActive) {
+                speakText("ลบสินค้าออกจากตะกร้าแล้ว");
+            }
+        }
+
+        function checkoutOrder() {
+            if (cart.length === 0) return;
+            
+            closeCartModal();
+            
+            // Notification that order is prepared for submission to store
+            const orderSummaryText = `บันทึกคำสั่งซื้อเรียบร้อยแล้ว มีสินค้าจำนวน ${cart.reduce((s, i) => s + i.quantity, 0)} ชิ้น ยอดรวม ${document.getElementById('cart-grand-total').textContent}. กรุณาติดต่อทางร้านผ่านเบอร์โทรศัพท์ 099-383-9985 หรือเฟซบุ๊กเพื่อยืนยันการชำระเงินและจัดส่ง`;
+            
+            if (isScreenReaderActive) {
+                speakText(orderSummaryText);
+            }
+            
+            alertCustom("บันทึกคำสั่งซื้อเรียบร้อย! กรุณาติดต่อยืนยันรายการกับทางร้านผ่านเบอร์ 099-383-9985 หรือ Facebook ของร้าน");
+            
+            // Clear cart after successful submission workflow
+            cart = [];
+            updateCartBadge();
+        }
+
+        // Custom Notification box (Replacing alert to satisfy safety guidelines)
+        function alertCustom(message) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn';
+            modal.innerHTML = `
+                <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-navy">แจ้งเตือนจากระบบ</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-accent hover:bg-accent-hover text-white py-3 rounded-xl font-medium transition shadow-md shadow-accent/30 sr-focus" data-speak="ตกลง">ตกลง</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+    </script>
+</body>
+</html>

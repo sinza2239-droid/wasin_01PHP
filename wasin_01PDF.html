@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVECARE — นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { DEFAULT: '#0F172A', 800: '#1E293B', 900: '#0F172A' },
+                        teal: { DEFAULT: '#0D9488', 600: '#0D9488', 700: '#0F766E', 50: '#F0FDFA', 100: '#CCFBF1' },
+                        amber: { DEFAULT: '#D97706', 500: '#F59E0B', 600: '#D97706' },
+                        lightbg: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Prompt', 'Sarabun', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        
+        /* Accessibility High Contrast Mode */
+        .high-contrast { background-color: #000000 !important; color: #FFFF00 !important; }
+        .high-contrast * { background-color: #000000 !important; color: #FFFF00 !important; border-color: #FFFF00 !important; }
+        .high-contrast a, .high-contrast button { text-decoration: underline !important; font-weight: bold !important; }
+
+        /* Grayscale Mode */
+        .grayscale-mode { filter: grayscale(100%); }
+
+        /* Font Resizing Classes */
+        .text-scale-110 { font-size: 110% !important; }
+        .text-scale-120 { font-size: 120% !important; }
+        .text-scale-130 { font-size: 130% !important; }
+
+        /* Letter Spacing */
+        .wide-spacing { letter-spacing: 0.12em !important; word-spacing: 0.2em !important; line-height: 1.8 !important; }
+
+        /* Focus Outline Highlighting */
+        .highlight-focus *:focus { outline: 4px solid #F59E0B !important; outline-offset: 3px !important; }
+
+        /* Disable Animations */
+        .no-animation * { animation: none !important; transition: none !important; }
+
+        /* TTS Reading Highlight */
+        .tts-reading-highlight { outline: 3px solid #0D9488; background-color: rgba(13, 148, 136, 0.15); border-radius: 4px; }
+        
+        .badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 transition-all duration-200">
+    <!-- Accessible Skip Link for Keyboard Users -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-500 focus:text-slate-900 focus:font-bold focus:rounded-md shadow-lg">
+        ข้ามไปที่เนื้อหาหลัก (Skip to Main Content)
+    </a>
+
+    <!-- Top Accessibility Announcement Bar -->
+    <div id="aria-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- GLOBAL ACCESSIBILITY & THAI TTS CONTROL BAR -->
+    <div class="bg-slate-900 text-white text-sm py-2 px-4 shadow-inner border-b border-slate-700">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Fast Accessibility Toggles -->
+            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                <span class="font-semibold text-teal-300 flex items-center gap-1">
+                    <i class="fa-solid font-bold fa-universal-access"></i> การเข้าถึง:
+                </span>
+                <button onclick="toggleAccessibilityMenu()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1 rounded border border-slate-600 transition flex items-center gap-1" aria-label="เปิดแผงตั้งค่าการเข้าถึง">
+                    <i class="fa-solid fa-sliders text-amber-400"></i> ปรับแต่งการมองเห็น
+                </button>
+                <button onclick="adjustFontSize(1)" class="bg-slate-800 hover:bg-slate-700 text-xs px-2 py-1 rounded border border-slate-600" title="เพิ่มขนาดอักษร" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+                <button onclick="adjustFontSize(-1)" class="bg-slate-800 hover:bg-slate-700 text-xs px-2 py-1 rounded border border-slate-600" title="ลดขนาดอักษร" aria-label="ลดขนาดตัวอักษร">A-</button>
+                <button onclick="toggleHighContrast()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2 py-1 rounded border border-slate-600" aria-label="เปิดปิดโหมดคอนทราสต์สูง">
+                    <i class="fa-solid fa-circle-half-stroke text-yellow-300"></i> คอนทราสต์
+                </button>
+            </div>
+
+            <!-- Thai Speech Control Widget -->
+            <div class="flex items-center space-x-2 flex-wrap gap-y-1 bg-slate-800/80 p-1 rounded border border-slate-700">
+                <span class="text-xs font-semibold text-amber-400 flex items-center gap-1 pl-1">
+                    <i class="fa-solid fa-volume-high"></i> ช่วยอ่านภาษาไทย:
+                </span>
+                <button onclick="speakPageThai()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-2.5 py-1 rounded font-medium flex items-center gap-1 transition" aria-label="อ่านทั้งหน้าเป็นภาษาไทย">
+                    <i class="fa-solid fa-play"></i> อ่านหน้าเว็บ
+                </button>
+                <button onclick="pauseSpeech()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-2 py-1 rounded" aria-label="หยุดชั่วคราว">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button onclick="resumeSpeech()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-2 py-1 rounded" aria-label="อ่านต่อ">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="stopSpeech()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs px-2 py-1 rounded" aria-label="หยุดอ่าน">
+                    <i class="fa-solid fa-stop"></i>
+                </button>
+                <div class="hidden md:flex items-center space-x-1 pl-2 border-l border-slate-600 text-xs">
+                    <span>ความเร็ว:</span>
+                    <button onclick="changeSpeechRate(-0.2)" class="px-1.5 bg-slate-700 rounded">-</button>
+                    <span id="rate-display" class="text-amber-300 font-mono">1.0x</span>
+                    <button onclick="changeSpeechRate(0.2)" class="px-1.5 bg-slate-700 rounded">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCESSIBILITY SETTINGS PANEL MODAL -->
+    <div id="accessibility-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-start pt-16 px-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 border-2 border-teal-600 text-slate-800 relative animate-fade-in">
+            <button onclick="toggleAccessibilityMenu()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-xl font-bold p-2" aria-label="ปิดเมนูการช่วยการเข้าถึง">&times;</button>
+            <h3 class="text-xl font-bold text-slate-900 border-b pb-3 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-universal-access text-teal-600"></i> การช่วยการเข้าถึงสำหรับทุกคน (Accessibility Settings)
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-semibold mb-2 text-sm">ขนาดตัวอักษร (Text Size):</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setFontScale(0)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded font-medium text-sm">ปกติ (100%)</button>
+                        <button onclick="setFontScale(1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded font-medium text-sm">ใหญ่ (110%)</button>
+                        <button onclick="setFontScale(2)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded font-medium text-sm">ใหญ่มาก (120%)</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-2 text-sm">โหมดการมองเห็น (Visual Modes):</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="toggleHighContrast()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded text-left text-sm font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-circle-half-stroke text-amber-600"></i> คอนทราสต์สูง
+                        </button>
+                        <button onclick="toggleGrayscale()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded text-left text-sm font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-eye-slash text-slate-600"></i> โหมดสีเทา
+                        </button>
+                        <button onclick="toggleLetterSpacing()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded text-left text-sm font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-[#0D9488] fa-text-width"></i> เพิ่มระยะห่างอักษร
+                        </button>
+                        <button onclick="toggleFocusHighlight()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded text-left text-sm font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-border-all text-teal-600"></i> เน้นกรอบโฟกัส
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-2 text-sm">การเคลื่อนไหว (Motion):</label>
+                    <button onclick="toggleDisableAnimation()" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded text-left text-sm font-medium flex items-center justify-between">
+                        <span><i class="fa-solid fa-ban text-rose-600 mr-2"></i> ปิด Animation / ภาพเคลื่อนไหว</span>
+                        <span id="anim-status-tag" class="text-xs bg-slate-300 px-2 py-0.5 rounded">ปกติ</span>
+                    </button>
+                </div>
+
+                <div class="pt-3 border-t">
+                    <button onclick="resetAccessibility()" class="w-full py-2 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i> คืนค่าการตั้งค่าเริ่มต้นทั้งหมด
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER NAVIGATION -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                
+                <!-- Logo Block -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-900 to-teal-700 flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-wheelchair-move text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-tight text-slate-900 block leading-none">MOVE<span class="text-teal-600">CARE</span></span>
+                        <span class="text-[10px] text-slate-500 font-medium tracking-wide uppercase block mt-1" data-i18n="tagline_sub">นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่า</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2" aria-label="เมนูหลัก">
+                    <button onclick="navigateTo('home')" id="nav-home" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_home">หน้าแรก</button>
+                    <button onclick="navigateTo('innovation')" id="nav-innovation" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_innovation">นวัตกรรม</button>
+                    <button onclick="navigateTo('service')" id="nav-service" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_service">ศูนย์บริการ</button>
+                    <button onclick="navigateTo('shop')" id="nav-shop" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_shop">ร้านค้า</button>
+                    <button onclick="navigateTo('reviews')" id="nav-reviews" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_reviews">รีวิว</button>
+                    <button onclick="navigateTo('contact')" id="nav-contact" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition" data-i18n="nav_contact">ติดต่อเรา</button>
+
+                    <!-- More Links Dropdown -->
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-lg text-sm font-medium hover:text-teal-600 hover:bg-slate-50 transition inline-flex items-center gap-1">
+                            <span data-i18n="nav_more">เพิ่มเติม</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 w-64 mt-1 bg-white rounded-xl shadow-xl border border-slate-100 hidden group-hover:block z-50 p-2">
+                            <a href="#" onclick="openLannaGraphicDesign(event)" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-slate-50 font-medium text-slate-800">
+                                <i class="fa-solid fa-palette text-amber-500 mr-2"></i> LANNA GRAPHIC DESIGN
+                                <span class="block text-[11px] text-slate-500 mt-0.5">ธุรกิจงานกราฟิกและงานสกรีน</span>
+                            </a>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <button onclick="navigateTo('privacy')" class="w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 rounded" data-i18n="nav_privacy">นโยบายความเป็นส่วนตัว</button>
+                            <button onclick="navigateTo('terms')" class="w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 rounded" data-i18n="nav_terms">เงื่อนไขการใช้งาน</button>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Action Controls: Cart & Language -->
+                <div class="flex items-center space-x-3">
+                    <!-- Language Selector Button -->
+                    <button onclick="toggleLanguage()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:border-teal-600 hover:text-teal-600 transition flex items-center gap-1.5" aria-label="สลับภาษา / Change Language">
+                        <i class="fa-solid fa-globe text-teal-600"></i>
+                        <span id="current-lang-label">TH / EN</span>
+                    </button>
+
+                    <!-- Cart Button with Counter -->
+                    <button onclick="navigateTo('cart')" class="relative p-2 text-slate-700 hover:text-teal-600 transition" aria-label="ตะกร้าสินค้า">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cart-badge-count" class="absolute -top-1 -right-1 bg-amber-500 text-slate-900 font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Trigger -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-700 hover:text-teal-600 text-xl" aria-label="เปิดเมนูมือถือ">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_home">หน้าแรก</button>
+            <button onclick="navigateTo('innovation'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_innovation">นวัตกรรม</button>
+            <button onclick="navigateTo('service'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_service">ศูนย์บริการ</button>
+            <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_shop">ร้านค้า</button>
+            <button onclick="navigateTo('reviews'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_reviews">รีวิว</button>
+            <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-800 hover:bg-slate-100" data-i18n="nav_contact">ติดต่อเรา</button>
+            <div class="border-t border-slate-200 pt-2">
+                <a href="#" onclick="openLannaGraphicDesign(event)" class="block px-3 py-2 font-medium text-amber-600 hover:bg-amber-50 rounded-md">
+                    <i class="fa-solid fa-external-link mr-1"></i> LANNA GRAPHIC DESIGN
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- DYNAMIC ROUTING MAIN CONTAINER -->
+    <main id="main-content" class="flex-grow">
+        <!-- Application pages will render here dynamically via JS SPA Router -->
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 pt-12 pb-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <!-- Col 1: Platform Info -->
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-wheelchair-move"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-wider">MOVECARE</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="footer_desc">
+                    นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง ผลงานนวัตกรรมทางการแพทย์เพื่อสังคม โดยวิทยาลัยสารพัดช่างเชียงใหม่ ยืดเอ็น ฟื้นฟูการเคลื่อนไหว อย่างปลอดภัย
+                </p>
+                <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700 text-xs text-amber-300">
+                    <i class="fa-solid fa-quote-left mr-1"></i> “ทุกการเคลื่อนไหวมีความหมาย ทุกคนเข้าถึงการฟื้นฟูได้”
+                </div>
+            </div>
+
+            <!-- Col 2: Quick Links -->
+            <div>
+                <h4 class="text-white font-semibold text-sm uppercase mb-4 border-b border-slate-800 pb-2">เมนูรวดเร็ว</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><button onclick="navigateTo('home')" class="hover:text-teal-400">หน้าแรก (Home)</button></li>
+                    <li><button onclick="navigateTo('innovation')" class="hover:text-teal-400">รายละเอียดนวัตกรรม (Innovation)</button></li>
+                    <li><button onclick="navigateTo('service')" class="hover:text-teal-400">แจ้งซ่อม & ศูนย์บริการ (Service)</button></li>
+                    <li><button onclick="navigateTo('shop')" class="hover:text-teal-400">ร้านค้าอุปกรณ์ (Shop)</button></li>
+                    <li><button onclick="navigateTo('order-tracking')" class="hover:text-teal-400">ติดตามคำสั่งซื้อ (Order Tracking)</button></li>
+                    <li><button onclick="navigateTo('service-tracking')" class="hover:text-teal-400">ติดตามคำขอบริการ (Service Tracking)</button></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Accessibility & Policy -->
+            <div>
+                <h4 class="text-white font-semibold text-sm uppercase mb-4 border-b border-slate-800 pb-2">การเข้าถึง & นโยบาย</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><button onclick="speakPageThai()" class="hover:text-amber-400 flex items-center gap-1"><i class="fa-solid fa-volume-high text-amber-400"></i> ช่วยอ่านภาษาไทย (TTS)</button></li>
+                    <li><button onclick="toggleAccessibilityMenu()" class="hover:text-teal-400">ปรับแต่งขนาดอักษร/สี</button></li>
+                    <li><button onclick="navigateTo('privacy')" class="hover:text-teal-400">นโยบายความเป็นส่วนตัว (Privacy Policy)</button></li>
+                    <li><button onclick="navigateTo('terms')" class="hover:text-teal-400">เงื่อนไขการใช้งาน (Terms of Use)</button></li>
+                    <li><a href="#" onclick="openLannaGraphicDesign(event)" class="text-amber-400 hover:underline">LANNA GRAPHIC DESIGN</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Contact Info Direct -->
+            <div class="space-y-3">
+                <h4 class="text-white font-semibold text-sm uppercase border-b border-slate-800 pb-2">ข้อมูลผู้ติดต่อ</h4>
+                <p class="text-xs text-slate-300 font-semibold">คุณวศิน วรเจริญวิช</p>
+                <p class="text-xs text-slate-400">หน่วยงาน: วิทยาลัยสารพัดช่างเชียงใหม่</p>
+                <div class="pt-1">
+                    <a href="tel:0993839985" class="inline-flex items-center gap-2 text-xs bg-teal-600 hover:bg-teal-500 text-white font-bold py-2 px-3 rounded-lg transition w-full justify-center">
+                        <i class="fa-solid fa-phone"></i> โทรหาคุณวศิน 099-383-9985
+                    </a>
+                </div>
+                <div>
+                    <a href="https://www.facebook.com/share/1EZeGGjWCb/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-3 rounded-lg transition w-full justify-center">
+                        <i class="fa-brands fa-facebook"></i> Facebook ติดต่อเรา
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+            <p>© 2026 MOVECARE Platform. พัฒนาโดย คุณวศิน วรเจริญวิช ร่วมกับ วิทยาลัยสารพัดช่างเชียงใหม่ สงวนลิขสิทธิ์</p>
+            <p class="mt-1 text-[11px] text-slate-600">ข้อตกลงทางการแพทย์: อุปกรณ์นี้ช่วยในการยืดและฟื้นฟูเบื้องต้น ไม่ได้เป็นการรักษาอัมพาตหรือทดแทนการแพทย์เฉพาะทาง</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <script>
+        // Configuration Variables
+        const LANNA_GRAPHIC_DESIGN_URL = "file:///C:/Users/Lenovo/Downloads/lanna_graphic_design%20(8).html";
+        
+        // Application Global State
+        const state = {
+            lang: 'th', // 'th' | 'en'
+            currentPage: 'home',
+            fontSizeLevel: 0, // 0, 1, 2
+            isHighContrast: false,
+            isGrayscale: false,
+            isLetterSpacing: false,
+            isFocusHighlight: false,
+            animationsDisabled: false,
+            cart: [
+                { id: 'p1', name_th: 'เครื่องยืดเอ็นใต้ข้อเข่าแนวตั้ง (รุ่นพรีเมียม)', name_en: 'Patellar Tendon Vertical Stretcher', price: 12500, qty: 1, image: 'ChatGPT Image 15 ก.ย. 2569 22_00_32.png' }
+            ],
+            reviews: [
+                { name: 'คุณสมศักดิ์ ป.', rating: 5, date: '10 มีนาคม 2026', comment: 'ใช้งานง่ายมากๆ ช่วยผ่อนคลายเอ็นใต้เข่าได้อย่างดี วัสดุแข็งแรงปลอดภัยมากครับ', type: 'ผู้ใช้งานจริง' },
+                { name: 'พยาบาลวิชาชีพ สุภาพร', rating: 5, date: '28 กุมภาพันธ์ 2026', comment: 'เป็นนวัตกรรมที่ออกแบบถูกต้องตามสรีระ ช่วยให้ผู้ป่วยฝึกยืดขาได้สม่ำเสมอขึ้น', type: 'บุคลากรทางการแพทย์' }
+            ],
+            speechSynth: window.speechSynthesis || null,
+            currentUtterance: null,
+            speechRate: 1.0,
+            thaiVoices: []
+        };
+
+        // Complete Internationalization Dictionary (i18n)
+        const translations = {
+            th: {
+                nav_home: "หน้าแรก",
+                nav_innovation: "นวัตกรรม",
+                nav_service: "ศูนย์บริการ",
+                nav_shop: "ร้านค้า",
+                nav_reviews: "รีวิว",
+                nav_contact: "ติดต่อเรา",
+                nav_more: "เพิ่มเติม",
+                nav_privacy: "นโยบายความเป็นส่วนตัว",
+                nav_terms: "เงื่อนไขการใช้งาน",
+                tagline_sub: "นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่า",
+                footer_desc: "นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง ผลงานนวัตกรรมทางการแพทย์เพื่อสังคม โดยวิทยาลัยสารพัดช่างเชียงใหม่",
+                btn_know_more: "รู้จักนวัตกรรม",
+                btn_shop_now: "เลือกซื้ออุปกรณ์",
+                btn_request_service: "เรียกใช้บริการ",
+                btn_listen_thai: "ช่วยอ่านภาษาไทย",
+                hero_title: "นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง",
+                hero_slogan: "“ขยับได้...ชีวิตไปต่อได้” นวัตกรรมเพื่อคุณภาพชีวิตที่ดีกว่า",
+                quick_access: "บริการด่วน MOVECARE",
+                dev_info: "ผู้พัฒนาโครงการ: คุณวศิน วรเจริญวิช (วิทยาลัยสารพัดช่างเชียงใหม่)",
+                call_wasin: "โทรหาคุณวศิน 099-383-9985",
+                fb_contact: "Facebook ติดต่อเรา",
+                maps_contact: "แผนที่วิทยาลัยสารพัดช่างเชียงใหม่"
+            },
+            en: {
+                nav_home: "Home",
+                nav_innovation: "Innovation",
+                nav_service: "Services",
+                nav_shop: "Shop",
+                nav_reviews: "Reviews",
+                nav_contact: "Contact Us",
+                nav_more: "More",
+                nav_privacy: "Privacy Policy",
+                nav_terms: "Terms of Use",
+                tagline_sub: "Vertical Knee Tendon Stretcher Innovation",
+                footer_desc: "Vertical Knee Tendon Stretcher Innovation for medical and social rehabilitation by Chiang Mai Poly-Technic College.",
+                btn_know_more: "Explore Innovation",
+                btn_shop_now: "Shop Equipment",
+                btn_request_service: "Request Service",
+                btn_listen_thai: "Listen Thai Audio",
+                hero_title: "Vertical Knee Tendon Stretcher Innovation",
+                hero_slogan: "“Moveable... Move Forward” Innovation for Better Quality of Life",
+                quick_access: "MOVECARE Quick Services",
+                dev_info: "Developer: Mr. Wasin Woracharoenwich (Chiang Mai Poly-Technic College)",
+                call_wasin: "Call Mr. Wasin 099-383-9985",
+                fb_contact: "Facebook Contact",
+                maps_contact: "Chiang Mai Poly-Technic College Map"
+            }
+        };
+
+        // Initialize Web Speech API Voices
+        function initTTSVoices() {
+            if ('speechSynthesis' in window) {
+                const updateVoices = () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    state.thaiVoices = voices.filter(v => v.lang.includes('th') || v.lang.includes('TH'));
+                };
+                updateVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = updateVoices;
+                }
+            }
+        }
+
+        function speakPageThai() {
+            if (!state.speechSynth) {
+                announceAria("เบราว์เซอร์ของคุณไม่รองรับระบบอ่านเสียง");
+                alert("อุปกรณ์หรือเบราว์เซอร์นี้ไม่รองรับ Web Speech API");
+                return;
+            }
+
+            // Stop any ongoing speech
+            stopSpeech();
+
+            // Extract ONLY THAI VISIBLE text from main content
+            const mainElem = document.getElementById('main-content');
+            if (!mainElem) return;
+
+            let thaiText = extractThaiText(mainElem.innerText);
+
+            if (!thaiText || thaiText.trim().length === 0) {
+                announceAria("ไม่พบข้อความภาษาไทยในหน้านี้");
+                alert("ไม่พบข้อความภาษาไทยที่จะอ่านในส่วนนี้");
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(thaiText);
+            utterance.lang = 'th-TH';
+            utterance.rate = state.speechRate;
+
+            // Pick Thai Voice if available
+            if (state.thaiVoices.length > 0) {
+                utterance.voice = state.thaiVoices[0];
+            } else {
+                announceAria("กำลังอ่านด้วยเสียงเริ่มต้นของระบบ");
+            }
+
+            utterance.onstart = () => announceAria("กำลังอ่านภาษาไทย");
+            utterance.onend = () => announceAria("อ่านจบแล้ว");
+            utterance.onerror = (e) => {
+                console.error("TTS Error:", e);
+                announceAria("อุปกรณ์นี้ยังไม่พบเสียงภาษาไทย กรุณาตรวจสอบการตั้งค่าเสียง");
+            };
+
+            state.currentUtterance = utterance;
+            state.speechSynth.speak(utterance);
+        }
+
+        // Helper to extract strictly Thai characters & relevant text, ignoring English translations hidden/markup
+        function extractThaiText(text) {
+            // Filter out non-Thai heavily or sanitize HTML symbols
+            return text.replace(/[^\u0E00-\u0E7F0-9\s.,!?()]/g, ' ')
+                       .replace(/\s+/g, ' ')
+                       .trim();
+        }
+
+        function pauseSpeech() {
+            if (state.speechSynth && state.speechSynth.speaking) {
+                state.speechSynth.pause();
+                announceAria("หยุดอ่านชั่วคราว");
+            }
+        }
+
+        function resumeSpeech() {
+            if (state.speechSynth && state.speechSynth.paused) {
+                state.speechSynth.resume();
+                announceAria("อ่านต่อ");
+            }
+        }
+
+        function stopSpeech() {
+            if (state.speechSynth) {
+                state.speechSynth.cancel();
+                announceAria("ยกเลิกการอ่านแล้ว");
+            }
+        }
+
+        function changeSpeechRate(delta) {
+            state.speechRate = Math.min(Math.max(0.6, state.speechRate + delta), 2.0);
+            document.getElementById('rate-display').innerText = state.speechRate.toFixed(1) + 'x';
+            announceAria(`ปรับความเร็วเป็น ${state.speechRate.toFixed(1)} เท่า`);
+        }
+
+        function announceAria(message) {
+            const announcer = document.getElementById('aria-announcer');
+            if (announcer) {
+                announcer.innerText = message;
+            }
+        }
+
+        function toggleAccessibilityMenu() {
+            const modal = document.getElementById('accessibility-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function adjustFontSize(delta) {
+            state.fontSizeLevel = Math.max(0, Math.min(2, state.fontSizeLevel + delta));
+            applyAccessibilityStyles();
+        }
+
+        function setFontScale(level) {
+            state.fontSizeLevel = level;
+            applyAccessibilityStyles();
+        }
+
+        function toggleHighContrast() {
+            state.isHighContrast = !state.isHighContrast;
+            applyAccessibilityStyles();
+        }
+
+        function toggleGrayscale() {
+            state.isGrayscale = !state.isGrayscale;
+            applyAccessibilityStyles();
+        }
+
+        function toggleLetterSpacing() {
+            state.isLetterSpacing = !state.isLetterSpacing;
+            applyAccessibilityStyles();
+        }
+
+        function toggleFocusHighlight() {
+            state.isFocusHighlight = !state.isFocusHighlight;
+            applyAccessibilityStyles();
+        }
+
+        function toggleDisableAnimation() {
+            state.animationsDisabled = !state.animationsDisabled;
+            document.getElementById('anim-status-tag').innerText = state.animationsDisabled ? "ปิดแล้ว" : "ปกติ";
+            applyAccessibilityStyles();
+        }
+
+        function resetAccessibility() {
+            state.fontSizeLevel = 0;
+            state.isHighContrast = false;
+            state.isGrayscale = false;
+            state.isLetterSpacing = false;
+            state.isFocusHighlight = false;
+            state.animationsDisabled = false;
+            applyAccessibilityStyles();
+            announceAria("คืนค่าการตั้งค่าเริ่มต้นแล้ว");
+        }
+
+        function applyAccessibilityStyles() {
+            const body = document.body;
+            
+            // Text scale
+            body.classList.remove('text-scale-110', 'text-scale-120');
+            if (state.fontSizeLevel === 1) body.classList.add('text-scale-110');
+            if (state.fontSizeLevel === 2) body.classList.add('text-scale-120');
+
+            // Contrast & Modes
+            body.classList.toggle('high-contrast', state.isHighContrast);
+            body.classList.toggle('grayscale-mode', state.isGrayscale);
+            body.classList.toggle('wide-spacing', state.isLetterSpacing);
+            body.classList.toggle('highlight-focus', state.isFocusHighlight);
+            body.classList.toggle('no-animation', state.animationsDisabled);
+        }
+
+        function toggleLanguage() {
+            state.lang = state.lang === 'th' ? 'en' : 'th';
+            document.documentElement.lang = state.lang;
+            document.getElementById('current-lang-label').innerText = state.lang.toUpperCase();
+            
+            // Update static elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (translations[state.lang] && translations[state.lang][key]) {
+                    elem.innerText = translations[state.lang][key];
+                }
+            });
+
+            // Re-render active dynamic page
+            renderPage(state.currentPage);
+            announceAria(`เปลี่ยนเป็นภาษา ${state.lang === 'th' ? 'ไทย' : 'อังกฤษ'}`);
+        }
+
+        function openLannaGraphicDesign(e) {
+            e.preventDefault();
+            // Show safety warning about local file:/// link requirement
+            const message = "หมายเหตุสำหรับผู้ใช้งาน:\n\nลิงก์ LANNA GRAPHIC DESIGN ถูกกำหนดไว้เป็นไฟล์ภายในเครื่อง (file:///C:/Users/Lenovo/Downloads/lanna_graphic_design%20(8).html)\n\nเบราว์เซอร์จะไม่อนุญาตให้เปิดไฟล์ภายในเครื่องโดยตรงจากเว็บเพื่อความปลอดภัย หากผู้ดูแลระบบต้องการนำไปใช้งานจริง กรุณาเปลี่ยนตัวแปร LANNA_GRAPHIC_DESIGN_URL ให้เป็น HTTPS URL สาธารณะ";
+            alert(message);
+            console.warn("LANNA_GRAPHIC_DESIGN_URL:", LANNA_GRAPHIC_DESIGN_URL);
+        }
+
+        function navigateTo(pageId, params = {}) {
+            stopSpeech(); // Stop speech when switching pages
+            state.currentPage = pageId;
+            
+            // Update Active Nav Styles
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('text-teal-600', 'font-bold');
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) activeNav.classList.add('text-teal-600', 'font-bold');
+
+            renderPage(pageId, params);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            announceAria(`เปลี่ยนหน้าเป็น ${pageId}`);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function renderPage(pageId, params = {}) {
+            const container = document.getElementById('main-content');
+            
+            switch(pageId) {
+                case 'home':
+                    container.innerHTML = renderHomePage();
+                    break;
+                case 'innovation':
+                    container.innerHTML = renderInnovationPage();
+                    break;
+                case 'service':
+                    container.innerHTML = renderServicePage();
+                    break;
+                case 'shop':
+                    container.innerHTML = renderShopPage();
+                    break;
+                case 'product-details':
+                    container.innerHTML = renderProductDetailsPage(params.id || 'p1');
+                    break;
+                case 'cart':
+                    container.innerHTML = renderCartPage();
+                    break;
+                case 'checkout':
+                    container.innerHTML = renderCheckoutPage();
+                    break;
+                case 'order-tracking':
+                    container.innerHTML = renderOrderTrackingPage();
+                    break;
+                case 'service-tracking':
+                    container.innerHTML = renderServiceTrackingPage();
+                    break;
+                case 'reviews':
+                    container.innerHTML = renderReviewsPage();
+                    break;
+                case 'contact':
+                    container.innerHTML = renderContactPage();
+                    break;
+                case 'privacy':
+                    container.innerHTML = renderPrivacyPage();
+                    break;
+                case 'terms':
+                    container.innerHTML = renderTermsPage();
+                    break;
+                default:
+                    container.innerHTML = renderNotFoundPage();
+            }
+        }
+
+        function renderHomePage() {
+            return `
+            <!-- HERO SECTION -->
+            <section class="bg-gradient-to-b from-slate-900 via-slate-800 to-teal-900 text-white py-12 md:py-20 px-4">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-6">
+                        <span class="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold">
+                            <i class="fa-solid fa-award"></i> ผลงานนวัตกรรมสายอาชีวศึกษา
+                        </span>
+                        <h1 class="text-3xl md:text-5xl font-black leading-tight">
+                            นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง
+                        </h1>
+                        <p class="text-lg text-teal-100 font-medium border-l-4 border-amber-500 pl-4">
+                            “ขยับได้...ชีวิตไปต่อได้” นวัตกรรมเล็ก ๆ ที่อาจสร้างการเปลี่ยนแปลงครั้งใหญ่ในชีวิต
+                        </p>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            แพลตฟอร์มศูนย์รวมข้อมูล นวัตกรรม การเลือกซื้ออุปกรณ์ บริการแจ้งซ่อม นัดหมาย และติดตามสถานะ เพื่อผู้สูงอายุ ผู้ป่วยฟื้นฟู และทุกคนที่ต้องการการดูแลข้อเข่าอย่างปลอดภัย
+                        </p>
+                        
+                        <!-- Main Action Buttons -->
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <button onclick="navigateTo('innovation')" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb"></i> รู้จักนวัตกรรม
+                            </button>
+                            <button onclick="navigateTo('shop')" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2">
+                                <i class="fa-solid fa-cart-shopping"></i> เลือกซื้ออุปกรณ์
+                            </button>
+                            <button onclick="navigateTo('service')" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-5 rounded-xl border border-slate-600 transition flex items-center gap-2">
+                                <i class="fa-solid fa-screwdriver-wrench"></i> เรียกใช้บริการ
+                            </button>
+                            <button onclick="speakPageThai()" class="bg-teal-900/80 hover:bg-teal-800 text-amber-300 font-semibold py-3 px-4 rounded-xl border border-teal-600/50 transition flex items-center gap-2">
+                                <i class="fa-solid fa-volume-high"></i> ช่วยอ่านภาษาไทย
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Prototype Image Showcase -->
+                    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-2xl space-y-3">
+                        <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-700">
+                            <img src="ChatGPT Image 15 ก.ย. 2569 22_00_32.png" alt="เครื่องต้นแบบ MOVECARE นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-center p-6 text-slate-400\'><i class=\'fa-solid fa-microchip text-4xl mb-2 text-teal-500\'></i><p class=\'font-bold text-sm\'>พื้นที่สำหรับภาพเครื่องต้นแบบ MOVECARE</p></div>';">
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                            <span><i class="fa-solid fa-check-circle text-teal-400"></i> อุปกรณ์ต้นแบบจริง</span>
+                            <span>วิทยาลัยสารพัดช่างเชียงใหม่</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK ACCESS CARDS (8 ITEMS) -->
+            <section class="max-w-7xl mx-auto px-4 py-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-grip text-teal-600"></i> บริการด่วนและเมนูหลัก MOVECARE
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button onclick="navigateTo('innovation')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-teal-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-kit-medical"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">1. อุปกรณ์ฟื้นฟู</h3>
+                        <p class="text-xs text-slate-500">ศึกษารายละเอียดนวัตกรรมและส่วนประกอบ</p>
+                    </button>
+
+                    <button onclick="navigateTo('service')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-amber-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-wrench"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">2. แจ้งซ่อมอุปกรณ์</h3>
+                        <p class="text-xs text-slate-500">แจ้งซ่อม ปรับระดับ หรือแก้ไขปัญหา</p>
+                    </button>
+
+                    <button onclick="navigateTo('service')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-blue-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">3. บำรุงรักษา</h3>
+                        <p class="text-xs text-slate-500">ตรวจเช็คสภาพโครงสร้างและแผ่นรอง</p>
+                    </button>
+
+                    <button onclick="navigateTo('service')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">4. นัดหมายผู้เชี่ยวชาญ</h3>
+                        <p class="text-xs text-slate-500">จองวันนัดเพื่อปรึกษาหรือสาธิตการใช้</p>
+                    </button>
+
+                    <button onclick="navigateTo('shop')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">5. ร้านค้าอุปกรณ์เสริม</h3>
+                        <p class="text-xs text-slate-500">เลือกสั่งซื้อสายรัด แผ่นรอง และอะไหล่</p>
+                    </button>
+
+                    <button onclick="navigateTo('reviews')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-rose-100 text-rose-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-rose-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">6. รีวิวผู้ใช้งาน</h3>
+                        <p class="text-xs text-slate-500">อ่านประสบการณ์จากผู้ใช้จริง</p>
+                    </button>
+
+                    <button onclick="navigateTo('contact')" class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition text-left group">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-lg flex items-center justify-center text-xl mb-3 group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-address-book"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">7. ติดต่อเรา</h3>
+                        <p class="text-xs text-slate-500">ช่องทางติดต่อผู้พัฒนาและเบอร์โทร</p>
+                    </button>
+
+                    <button onclick="toggleAccessibilityMenu()" class="p-5 bg-slate-900 text-white rounded-xl shadow-sm hover:shadow-md transition text-left group border border-slate-700">
+                        <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-universal-access"></i>
+                        </div>
+                        <h3 class="font-bold text-amber-300 mb-1">8. ช่วยการเข้าถึง</h3>
+                        <p class="text-xs text-slate-400">ปรับฟอนต์ คอนทราสต์ หรืออ่านเสียง</p>
+                    </button>
+                </div>
+            </section>
+
+            <!-- TARGET GROUPS & STEPS -->
+            <section class="bg-white py-12 border-y border-slate-200">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-2xl font-bold text-slate-900 text-center mb-8">กลุ่มผู้ใช้งานที่ได้รับประโยชน์</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-6 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                            <div class="text-teal-600 text-3xl mb-2"><i class="fa-solid fa-wheelchair"></i></div>
+                            <h3 class="font-bold text-lg text-slate-900">ผู้ป่วยอัมพฤกษ์ครึ่งซีก</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">ช่วยในการยืดเอ็นใต้ข้อเข่าชะลอการยึดติดของข้อ ให้สามารถยืดและเคลื่อนไหวขาได้อย่างปลอดภัย</p>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                            <div class="text-teal-600 text-3xl mb-2"><i class="fa-solid fa-person-walking-with-cane"></i></div>
+                            <h3 class="font-bold text-lg text-slate-900">ผู้ป่วยกล้ามเนื้ออ่อนแรง</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">เพิ่มความแข็งแรงและความยืดหยุ่นในแนวตั้ง เหมาะสำหรับผู้สูงอายุและผู้ป่วยระยะฟื้นฟู</p>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                            <div class="text-teal-600 text-3xl mb-2"><i class="fa-solid fa-bed-pulse"></i></div>
+                            <h3 class="font-bold text-lg text-slate-900">ผู้ป่วยหลังการผ่าตัด</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">ส่งเสริมการฟื้นตัวอย่างค่อยเป็นค่อยไปภายใต้การดูแลหรือคำแนะนำจากแพทย์</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            `;
+        }
+
+        function renderInnovationPage() {
+            return `
+            <div class="max-w-7xl mx-auto px-4 py-8 space-y-10">
+                <div class="border-b border-slate-200 pb-4">
+                    <h1 class="text-3xl font-black text-slate-900">รายละเอียดนวัตกรรม</h1>
+                    <p class="text-sm text-slate-600">เครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง — ผลงานวิทยาลัยสารพัดช่างเชียงใหม่</p>
+                </div>
+
+                <!-- Technical Showcase Images -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                        <img src="ChatGPT Image 15 ก.ย. 2569 22_00_32.png" alt="โครงสร้างเครื่องยืดเอ็น" class="h-64 mx-auto object-contain mb-3" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0f172a/0d9488?text=MOVECARE+Prototype';">
+                        <h3 class="font-bold text-sm text-slate-900">โครงสร้างหลักของเครื่อง</h3>
+                        <p class="text-xs text-slate-500 mt-1">โครงเหล็กแข็งแรงปรับระดับองศาได้</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                        <img src="116278_0.jpg" alt="แผ่นรองซัพพอร์ตสรีระเข่า" class="h-64 mx-auto object-contain mb-3" onerror="this.onerror=null; this.src='https://placehold.co/400x300/f8fafc/0f172a?text=Knee+Support+Pad';">
+                        <h3 class="font-bold text-sm text-slate-900">แผ่นรองซัพพอร์ตสรีระเข่า</h3>
+                        <p class="text-xs text-slate-500 mt-1">นุ่มพิเศษ กระจายแรงกดทับอย่างนุ่มนวล</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                        <img src="116277_0.jpg" alt="สายรัดข้อเข่าตรงจุด" class="h-64 mx-auto object-contain mb-3" onerror="this.onerror=null; this.src='https://placehold.co/400x300/f8fafc/0f172a?text=Tendon+Strap';">
+                        <h3 class="font-bold text-sm text-slate-900">สายรัดเพื่อการยืดหยุ่นตรงจุด</h3>
+                        <p class="text-xs text-slate-500 mt-1">Patellar Tendon Strap คุณภาพสูง</p>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900 border-l-4 border-teal-600 pl-3">ที่มาและความสำคัญ</h2>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            ข้อเข่าและเอ็นใต้ข้อเข่าเป็นส่วนสำคัญในการเคลื่อนไหวร่างกาย ผู้ป่วยอัมพฤกษ์ ผู้สูงอายุ หรือผู้ป่วยหลังผ่าตัดมักประสบปัญหาข้อเข่ายึดติดจากการไม่ได้ยืดเหยียด นวัตกรรมนี้จึงถูกออกแบบขึ้นในแนวตั้งเพื่อช่วยบริหารและยืดเอ็นได้อย่างตรงจุด ถูกสรีระ และลดภาระของผู้ดูแล
+                        </p>
+                        
+                        <h2 class="text-xl font-bold text-slate-900 border-l-4 border-teal-600 pl-3 pt-2">วัตถุประสงค์โครงการ</h2>
+                        <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+                            <li>เพื่อสร้างอุปกรณ์ยืดเอ็นใต้ข้อเข่าที่ปลอดภัยและใช้งานง่ายในครัวเรือน</li>
+                            <li>เพื่อเพิ่มโอกาสการเข้าถึงอุปกรณ์ฟื้นฟูกายภาพสำหรับผู้ป่วยทุกกลุ่ม</li>
+                            <li>เพื่อเป็นผลงานนวัตกรรมต้นแบบที่สามารถพัฒนาต่อยอดเชิงพาณิชย์และสังคม</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900 border-l-4 border-amber-500 pl-3">คุณสมบัติและส่วนประกอบ</h2>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="font-bold text-slate-900">1. โครงเหล็กรับน้ำหนักแนวตั้ง:</span>
+                                <p class="text-slate-600 mt-1">ผลิตจากวัสดุมาตรฐาน ชุบกันสนิม ทนทาน รองรับแรงยืดเหยียด</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="font-bold text-slate-900">2. ระบบปรับระดับแรงยืด (Vertical Stretch):</span>
+                                <p class="text-slate-600 mt-1">สามารถปรับตั้งระยะยืดตามคำแนะนำของนักกายภาพบำบัด</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="font-bold text-slate-900">3. ชุดแผ่นรองและสายรัดสรีระ (Ultra Soft Pad):</span>
+                                <p class="text-slate-600 mt-1">ผ้าผิวนุ่ม ระบายอากาศได้ดี ลดการเสียดสีและรอยกดทับ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="bg-teal-50 border border-teal-200 p-6 rounded-xl flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-teal-900">สนใจสั่งซื้อหรือสอบถามการใช้งานเพิ่มเติม?</h3>
+                        <p class="text-xs text-teal-700">สามารถสั่งซื้อผ่านร้านค้าระบบ หรือติดต่อคุณวศิน วรเจริญวิช ได้โดยตรง</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="navigateTo('shop')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-4 rounded-lg text-xs">
+                            ไปยังร้านค้า
+                        </button>
+                        <button onclick="navigateTo('contact')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-lg text-xs">
+                            ติดต่อสอบถาม
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function renderServicePage() {
+            return `
+            <div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+                <div class="border-b border-slate-200 pb-4">
+                    <h1 class="text-3xl font-black text-slate-900">ศูนย์บริการและนัดหมาย MOVECARE</h1>
+                    <p class="text-sm text-slate-600">บริการแจ้งซ่อม บำรุงรักษา และนัดหมายผู้เชี่ยวชาญ</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Form Type 1: แจ้งซ่อมอุปกรณ์ -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <h2 class="font-bold text-lg text-slate-900 border-b pb-2 text-amber-600 flex items-center gap-2">
+                            <i class="fa-solid fa-wrench"></i> 1. แจ้งซ่อมอุปกรณ์
+                        </h2>
+                        <form onsubmit="handleFormSubmit(event, 'แจ้งซ่อมอุปกรณ์')" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">ชื่อผู้ติดต่อ *</label>
+                                <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="กรอกชื่อ-นามสกุล">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">หมายเลขโทรศัพท์ *</label>
+                                <input type="tel" required class="w-full p-2.5 border rounded-lg" placeholder="09X-XXX-XXXX">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">อาการที่พบ *</label>
+                                <textarea required rows="3" class="w-full p-2.5 border rounded-lg" placeholder="อธิบายอาการเสีย เช่น น็อตหลวม สายรัดชำรุด..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition">
+                                ส่งคำขอแจ้งซ่อม
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Form Type 2: ขอรับบริการบำรุงรักษา -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <h2 class="font-bold text-lg text-slate-900 border-b pb-2 text-teal-600 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> 2. บำรุงรักษา / ตรวจเช็ค
+                        </h2>
+                        <form onsubmit="handleFormSubmit(event, 'ขอรับบริการบำรุงรักษา')" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">ชื่อผู้ขอรับบริการ *</label>
+                                <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="กรอกชื่อ-นามสกุล">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">เบอร์ติดต่อกลับ *</label>
+                                <input type="tel" required class="w-full p-2.5 border rounded-lg" placeholder="08X-XXX-XXXX">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">ประเภทการบำรุงรักษา</label>
+                                <select class="w-full p-2.5 border rounded-lg">
+                                    <option>เปลี่ยนแผ่นรองซัพพอร์ต</option>
+                                    <option>ตรวจสอบโครงเหล็กและข้อต่อ</option>
+                                    <option>เปลี่ยนสายรัด Patellar Strap</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg transition">
+                                ส่งคำขอบำรุงรักษา
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Form Type 3: นัดหมายผู้เชี่ยวชาญ -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <h2 class="font-bold text-lg text-slate-900 border-b pb-2 text-blue-600 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check"></i> 3. นัดหมายปรึกษา
+                        </h2>
+                        <form onsubmit="handleFormSubmit(event, 'นัดหมายผู้เชี่ยวชาญ')" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">ชื่อผู้ขอ นัดหมาย *</label>
+                                <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="กรอกชื่อ-นามสกุล">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">วันที่สะดวก *</label>
+                                <input type="date" required class="w-full p-2.5 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">ช่วงเวลาที่สะดวก</label>
+                                <select class="w-full p-2.5 border rounded-lg">
+                                    <option>ช่วงเช้า (09:00 - 12:00 น.)</option>
+                                    <option>ช่วงบ่าย (13:00 - 16:00 น.)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">
+                                จองวันนัดหมาย
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tracking Status Link Banner -->
+                <div class="bg-slate-900 text-white p-6 rounded-xl flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-amber-400">ส่งคำขอแล้วใช่ไหม?</h3>
+                        <p class="text-xs text-slate-300">คุณสามารถใช้หมายเลขคำขอเพื่อติดตามสถานะการดำเนินการได้ตลอด 24 ชั่วโมง</p>
+                    </div>
+                    <button onclick="navigateTo('service-tracking')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 px-5 rounded-lg text-xs">
+                        <i class="fa-solid fa-magnifying-glass"></i> ติดตามสถานะคำขอบริการ
+                    </button>
+                </div>
+            </div>
+            `;
+        }
+
+        function handleFormSubmit(e, serviceTitle) {
+            e.preventDefault();
+            const reqNo = "SRV-" + Math.floor(100000 + Math.random() * 900000);
+            alert(`[โหมดสาธิตระบบ]\n\nบันทึกข้อมูล "${serviceTitle}" เรียบร้อยแล้ว!\n\nหมายเลขติดตามของคุณคือ: ${reqNo}\n\n(ข้อมูลนี้เป็นการจำลองการทำงานในฝั่งระบบหน้าบ้าน)`);
+            navigateTo('service-tracking');
+        }
+
+        function renderShopPage() {
+            const products = [
+                {
+                    id: 'p1',
+                    name: 'เครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง (MOVECARE Main Unit)',
+                    price: 12500,
+                    category: 'เครื่องหลัก',
+                    image: 'ChatGPT Image 15 ก.ย. 2569 22_00_32.png',
+                    desc: 'ชุดนวัตกรรมเครื่องยืดเอ็นแนวตั้ง พร้อมปรับระดับแรงยืดและโครงเหล็กมาตรฐาน'
+                },
+                {
+                    id: 'p2',
+                    name: 'แผ่นรองซัพพอร์ตสรีระเข่า (Ergonomic Knee Support Pad)',
+                    price: 850,
+                    category: 'อุปกรณ์เสริม',
+                    image: '116278_0.jpg',
+                    desc: 'แผ่นรองนุ่มพิเศษ Ultra Soft Pad กระจายแรงกดทับ ถอดซักทำความสะอาดได้'
+                },
+                {
+                    id: 'p3',
+                    name: 'สายรัดข้อเข่าตรงจุด (Patellar Tendon Strap)',
+                    price: 450,
+                    category: 'อุปกรณ์เสริม',
+                    image: '116277_0.jpg',
+                    desc: 'สายรัดยืดหยุ่นสูง ปรับความกระชับได้ตามสรีระข้อเข่า'
+                }
+            ];
+
+            return `
+            <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+                <div class="border-b border-slate-200 pb-4 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-black text-slate-900">ร้านค้าและสั่งซื้ออุปกรณ์ MOVECARE</h1>
+                        <p class="text-sm text-slate-600">อุปกรณ์นวัตกรรม อะไหล่ และอุปกรณ์เสริมคุณภาพสูง</p>
+                    </div>
+                    <button onclick="navigateTo('cart')" class="bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-shopping-bag"></i> ตะกร้าสินค้า (${state.cart.length})
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${products.map(p => `
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
+                            <div class="p-4 bg-slate-50 text-center">
+                                <img src="${p.image}" alt="${p.name}" class="h-48 mx-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/300x200/0f172a/ffffff?text=MOVECARE';">
+                            </div>
+                            <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[10px] font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">${p.category}</span>
+                                    <h3 class="font-bold text-slate-900 mt-2 text-sm">${p.name}</h3>
+                                    <p class="text-xs text-slate-500 mt-1">${p.desc}</p>
+                                </div>
+                                <div class="pt-3 border-t flex items-center justify-between">
+                                    <span class="text-lg font-black text-teal-600">฿${p.price.toLocaleString()}</span>
+                                    <div class="flex gap-2">
+                                        <button onclick="navigateTo('product-details', {id: '${p.id}'})" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold">
+                                            รายละเอียด
+                                        </button>
+                                        <button onclick="addToCart('${p.id}', '${p.name}', ${p.price}, '${p.image}')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold shadow">
+                                            + ตะกร้า
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            `;
+        }
+
+        function addToCart(id, name, price, image) {
+            const existing = state.cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                state.cart.push({ id, name_th: name, name_en: name, price, qty: 1, image });
+            }
+            document.getElementById('cart-badge-count').innerText = state.cart.reduce((a, c) => a + c.qty, 0);
+            alert(`เพิ่ม "${name}" ลงในตะกร้าเรียบร้อยแล้ว`);
+        }
+
+        function renderProductDetailsPage(productId) {
+            return `
+            <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+                <button onclick="navigateTo('shop')" class="text-xs font-bold text-teal-600 hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> กลับไปหน้าร้านค้า
+                </button>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-slate-50 p-4 rounded-xl flex items-center justify-center">
+                        <img src="ChatGPT Image 15 ก.ย. 2569 22_00_32.png" alt="รายละเอียดสินค้า MOVECARE" class="max-h-80 object-contain">
+                    </div>
+                    <div class="space-y-4">
+                        <span class="badge bg-teal-100 text-teal-800">อุปกรณ์หลักนวัตกรรม</span>
+                        <h1 class="text-2xl font-black text-slate-900">เครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง MOVECARE</h1>
+                        <p class="text-2xl font-black text-teal-600">฿12,500 <span class="text-xs font-normal text-slate-500">(รวมภาษีแล้ว)</span></p>
+                        
+                        <div class="text-xs text-slate-600 space-y-2 border-y py-3">
+                            <p><strong>ผู้พัฒนา:</strong> คุณวศิน วรเจริญวิช (วิทยาลัยสารพัดช่างเชียงใหม่)</p>
+                            <p><strong>ขนาดโครงสร้าง:</strong> ปรับระดับความสูงได้ตามผู้ใช้งาน</p>
+                            <p><strong>การรับประกัน:</strong> รับประกันโครงสร้างเหล็ก 1 ปีเต็ม</p>
+                        </div>
+
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="addToCart('p1', 'เครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง', 12500, 'ChatGPT Image 15 ก.ย. 2569 22_00_32.png')" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> เพิ่มลงตะกร้า
+                            </button>
+                            <button onclick="navigateTo('checkout')" class="flex-1 py-3 bg-amber-600 hover:bg-amber-700 text-slate-900 font-bold rounded-xl shadow">
+                                สั่งซื้อทันที
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function renderCartPage() {
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            return `
+            <div class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+                <h1 class="text-3xl font-black text-slate-900 border-b pb-3">ตะกร้าสินค้าของคุณ</h1>
+
+                ${state.cart.length === 0 ? `
+                    <div class="text-center py-12 bg-white rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-cart-arrow-down text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-500 text-sm">ยังไม่มีสินค้าในตะกร้า</p>
+                        <button onclick="navigateTo('shop')" class="mt-4 px-4 py-2 bg-teal-600 text-white text-xs font-bold rounded-lg">
+                            เลือกซื้อสินค้า
+                        </button>
+                    </div>
+                ` : `
+                    <div class="bg-white rounded-xl border border-slate-200 divide-y">
+                        ${state.cart.map((item, idx) => `
+                            <div class="p-4 flex items-center justify-between gap-4">
+                                <div class="flex items-center space-x-3">
+                                    <img src="${item.image}" class="w-12 h-12 object-contain bg-slate-100 rounded">
+                                    <div>
+                                        <h3 class="font-bold text-xs text-slate-900">${item.name_th}</h3>
+                                        <p class="text-[11px] text-teal-600 font-semibold">฿${item.price.toLocaleString()} x ${item.qty}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm">฿${(item.price * item.qty).toLocaleString()}</span>
+                                    <button onclick="removeFromCart(${idx})" class="text-rose-600 p-2 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="bg-slate-900 text-white p-6 rounded-xl flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400">ยอดรวมทั้งหมด:</span>
+                            <h2 class="text-2xl font-black text-amber-400">฿${total.toLocaleString()}</h2>
+                        </div>
+                        <button onclick="navigateTo('checkout')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-xl text-xs">
+                            ดำเนินการสรุปคำสั่งซื้อ <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                `}
+            </div>
+            `;
+        }
+
+        function removeFromCart(index) {
+            state.cart.splice(index, 1);
+            document.getElementById('cart-badge-count').innerText = state.cart.reduce((a, c) => a + c.qty, 0);
+            renderPage('cart');
+        }
+
+        function renderCheckoutPage() {
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            return `
+            <div class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+                <h1 class="text-3xl font-black text-slate-900 border-b pb-3">สรุปรายการและที่อยู่จัดส่ง</h1>
+
+                <form onsubmit="handleCheckoutSubmit(event)" class="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+                    <h2 class="font-bold text-sm text-slate-900 border-b pb-2">ข้อมูลผู้รับสินค้า</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block font-semibold mb-1">ชื่อ-นามสกุล *</label>
+                            <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="กรอกชื่อผู้รับ">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">เบอร์โทรศัพท์ *</label>
+                            <input type="tel" required class="w-full p-2.5 border rounded-lg" placeholder="08X-XXX-XXXX">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block font-semibold mb-1">ที่อยู่จัดส่งโดยละเอียด *</label>
+                            <textarea required rows="3" class="w-full p-2.5 border rounded-lg" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between"><span>ยอดรวมสินค้า:</span><span>฿${total.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span>ค่าจัดส่ง:</span><span class="text-teal-600 font-bold">ฟรี</span></div>
+                        <div class="flex justify-between font-bold text-sm text-slate-900 pt-2 border-t"><span>ยอดชำระสุทธิ (สาธิต):</span><span class="text-teal-600">฿${total.toLocaleString()}</span></div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow">
+                        ยืนยันคำสั่งซื้อ (โหมดสาธิต)
+                    </button>
+                </form>
+            </div>
+            `;
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            const orderNo = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+            alert(`[โหมดสาธิตระบบสั่งซื้อ]\n\nสั่งซื้อสำเร็จ!\nหมายเลขคำสั่งซื้อของคุณคือ: ${orderNo}\n\nขอบคุณที่สนใจนวัตกรรม MOVECARE`);
+            state.cart = [];
+            document.getElementById('cart-badge-count').innerText = "0";
+            navigateTo('order-tracking');
+        }
+
+        function renderOrderTrackingPage() {
+            return `
+            <div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
+                <h1 class="text-3xl font-black text-slate-900 border-b pb-3">ติดตามคำสั่งซื้อ MOVECARE</h1>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+                    <label class="block text-xs font-bold">กรอกหมายเลขคำสั่งซื้อ (เช่น ORD-123456):</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="order-input" class="flex-1 p-2.5 border rounded-lg text-xs" placeholder="ORD-XXXXXX">
+                        <button onclick="checkOrderTrack()" class="px-4 py-2.5 bg-teal-600 text-white font-bold rounded-lg text-xs">ค้นหา</button>
+                    </div>
+                    <div id="order-result" class="hidden p-4 bg-teal-50 border border-teal-200 rounded-lg text-xs space-y-2">
+                        <p class="font-bold text-teal-900">สถานะล่าสุด: <span class="text-amber-600">กำลังเตรียมการจัดส่ง</span></p>
+                        <p class="text-slate-600">ผู้จัดส่ง: วิทยาลัยสารพัดช่างเชียงใหม่ (ทีมงานผู้พัฒนา)</p>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function checkOrderTrack() {
+            const val = document.getElementById('order-input').value;
+            if (val) {
+                document.getElementById('order-result').classList.remove('hidden');
+            } else {
+                alert("กรุณากรอกหมายเลขคำสั่งซื้อ");
+            }
+        }
+
+        function renderServiceTrackingPage() {
+            return `
+            <div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
+                <h1 class="text-3xl font-black text-slate-900 border-b pb-3">ติดตามคำขอบริการ / แจ้งซ่อม</h1>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+                    <label class="block text-xs font-bold">กรอกหมายเลขบริการ (เช่น SRV-123456):</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="srv-input" class="flex-1 p-2.5 border rounded-lg text-xs" placeholder="SRV-XXXXXX">
+                        <button onclick="checkServiceTrack()" class="px-4 py-2.5 bg-amber-600 text-slate-900 font-bold rounded-lg text-xs">ตรวจสอบ</button>
+                    </div>
+                    <div id="srv-result" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-lg text-xs space-y-2">
+                        <p class="font-bold text-amber-900">สถานะล่าสุด: <span class="text-teal-700">รับคำขอแล้ว อยู่ระหว่างการประสานงาน</span></p>
+                        <p class="text-slate-600">เจ้าหน้าที่ผู้รับเรื่อง: คุณวศิน วรเจริญวิช</p>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function checkServiceTrack() {
+            const val = document.getElementById('srv-input').value;
+            if (val) {
+                document.getElementById('srv-result').classList.remove('hidden');
+            } else {
+                alert("กรุณากรอกหมายเลขบริการ");
+            }
+        }
+
+        function renderReviewsPage() {
+            return `
+            <div class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+                <div class="border-b border-slate-200 pb-4">
+                    <h1 class="text-3xl font-black text-slate-900">รีวิวและประสบการณ์ผู้ใช้งาน</h1>
+                    <p class="text-sm text-slate-600">ความคิดเห็นจากผู้ใช้งานจริงและบุคลากรทางการแพทย์</p>
+                </div>
+
+                <!-- Review Form -->
+                <form onsubmit="submitReview(event)" class="bg-white p-6 rounded-xl border border-slate-200 space-y-3">
+                    <h2 class="font-bold text-sm text-slate-900">เขียนรีวิวของคุณ</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <input type="text" id="rev-name" required placeholder="ชื่อของคุณ" class="p-2.5 border rounded-lg">
+                        <select id="rev-type" class="p-2.5 border rounded-lg">
+                            <option>ผู้ใช้งานจริง / ผู้ป่วย</option>
+                            <option>ญาติผู้ดูแล</option>
+                            <option>บุคลากรทางการแพทย์</option>
+                        </select>
+                    </div>
+                    <textarea id="rev-comment" required rows="3" placeholder="ข้อเสนอแนะหรือประสบการณ์ใช้งาน..." class="w-full p-2.5 border rounded-lg text-xs"></textarea>
+                    <button type="submit" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs">
+                        ส่งรีวิว (ต้องผ่านการอนุมัติก่อนแสดงผล)
+                    </button>
+                </form>
+
+                <!-- Review List -->
+                <div class="space-y-4">
+                    ${state.reviews.map(r => `
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="font-bold text-slate-900">${r.name} <span class="text-[10px] font-normal text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200 ml-2">${r.type}</span></span>
+                                <span class="text-slate-400">${r.date}</span>
+                            </div>
+                            <div class="text-amber-500 text-xs">
+                                ${'<i class="fa-solid fa-star"></i>'.repeat(r.rating)}
+                            </div>
+                            <p class="text-xs text-slate-700 leading-relaxed">${r.comment}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            `;
+        }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('rev-name').value;
+            const comment = document.getElementById('rev-comment').value;
+            const type = document.getElementById('rev-type').value;
+
+            state.reviews.unshift({
+                name,
+                rating: 5,
+                date: 'วันนี้',
+                comment,
+                type
+            });
+
+            alert("ส่งรีวิวของคุณเรียบร้อยแล้ว ขอบพระคุณสำหรับความคิดเห็นครับ");
+            renderPage('reviews');
+        }
+
+        function renderContactPage() {
+            return `
+            <div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+                <div class="border-b border-slate-200 pb-4">
+                    <h1 class="text-3xl font-black text-slate-900">ศูนย์รวมข้อมูลและการติดต่อ (Contact Us)</h1>
+                    <p class="text-sm text-slate-600">รวบรวมช่องทางติดต่อผู้พัฒนา เบอร์โทรศัพท์ Facebook แผนที่ และลิงก์เครือข่ายทั้งหมดไว้ในที่เดียว</p>
+                </div>
+
+                <!-- Developer Profile Card -->
+                <div class="bg-gradient-to-r from-slate-900 to-teal-950 text-white p-6 md:p-8 rounded-2xl shadow-xl space-y-4">
+                    <span class="bg-amber-500 text-slate-900 font-bold text-[10px] uppercase px-2.5 py-1 rounded-full">
+                        ผู้พัฒนาโครงการ MOVECARE
+                    </span>
+                    <h2 class="text-2xl font-black">คุณวศิน วรเจริญวิช</h2>
+                    <p class="text-xs text-teal-200 leading-relaxed">
+                        โครงการ: นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง<br>
+                        หน่วยงาน: วิทยาลัยสารพัดช่างเชียงใหม่<br>
+                        หมายเลขโทรศัพท์: <a href="tel:0993839985" class="underline text-amber-300 font-bold">099-383-9985</a>
+                    </p>
+
+                    <!-- DIRECT ACTION BUTTONS (MANDATORY APIS) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3">
+                        <!-- Phone Call -->
+                        <a href="tel:0993839985" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+                            <i class="fa-solid fa-phone text-base"></i> โทรหาคุณวศิน
+                        </a>
+
+                        <!-- Facebook Contact -->
+                        <a href="https://www.facebook.com/share/1EZeGGjWCb/" target="_blank" rel="noopener noreferrer" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+                            <i class="fa-brands fa-facebook text-base"></i> Facebook ติดต่อเรา
+                        </a>
+
+                        <!-- Google Maps Search -->
+                        <a href="https://www.google.com/maps/search/?api=1&query=วิทยาลัยสารพัดช่างเชียงใหม่" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+                            <i class="fa-solid fa-map-location-dot text-base"></i> แผนที่สารพัดช่างเชียงใหม่
+                        </a>
+
+                        <!-- LANNA GRAPHIC DESIGN Link -->
+                        <button onclick="openLannaGraphicDesign(event)" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+                            <i class="fa-solid fa-palette text-base"></i> LANNA GRAPHIC
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Send Message Contact Form -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="font-bold text-lg text-slate-900 border-b pb-2">ส่งข้อความถึงทีมงานผู้พัฒนา</h2>
+                    <form onsubmit="handleContactMsg(event)" class="space-y-3 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold mb-1">ชื่อผู้ติดต่อ *</label>
+                                <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="กรอกชื่อของคุณ">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">เบอร์โทรศัพท์ / อีเมล *</label>
+                                <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="ช่องทางติดต่อกลับ">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">หัวข้อสอบถาม *</label>
+                            <input type="text" required class="w-full p-2.5 border rounded-lg" placeholder="เช่น สนใจสั่งซื้อ / สอบถามเทคนิค...">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">รายละเอียดข้อความ *</label>
+                            <textarea required rows="4" class="w-full p-2.5 border rounded-lg" placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
+                        </div>
+                        <button type="submit" class="py-3 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">
+                            ส่งข้อความ
+                        </button>
+                    </form>
+                </div>
+            </div>
+            `;
+        }
+
+        function handleContactMsg(e) {
+            e.preventDefault();
+            alert("[โหมดสาธิต]\n\nส่งข้อความของคุณถึง คุณวศิน วรเจริญวิช เรียบร้อยแล้ว ทีมงานจะติดต่อกลับโดยเร็วที่สุด");
+        }
+
+        function renderPrivacyPage() {
+            return `
+            <div class="max-w-4xl mx-auto px-4 py-8 space-y-4 bg-white my-6 p-6 rounded-xl border">
+                <h1 class="text-2xl font-bold text-slate-900 border-b pb-2">นโยบายความเป็นส่วนตัว (Privacy Policy)</h1>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    แพลตฟอร์ม MOVECARE ให้ความสำคัญอย่างยิ่งต่อการคุ้มครองข้อมูลส่วนบุคคลของผู้ใช้งาน ข้อมูลทั้งหมดที่จัดเก็บ เช่น ชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่ง จะถูกนำมาใช้เพื่อวัตถุประสงค์ในการให้บริการ ประสานงานซ่อมบำรุง และจัดส่งอุปกรณ์เท่านั้น โดยไม่มีการเปิดเผยหรือจำหน่ายแก่บุคคลภายนอกโดยไม่ได้รับอนุญาต
+                </p>
+            </div>
+            `;
+        }
+
+        function renderTermsPage() {
+            return `
+            <div class="max-w-4xl mx-auto px-4 py-8 space-y-4 bg-white my-6 p-6 rounded-xl border">
+                <h1 class="text-2xl font-bold text-slate-900 border-b pb-2">เงื่อนไขการใช้งาน (Terms of Use)</h1>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    อุปกรณ์นวัตกรรมเครื่องยืดเอ็นใต้ข้อเข่าแบบแนวตั้ง ถูกออกแบบขึ้นเพื่อเป็นอุปกรณ์ช่วยในการบริหารยืดเหยียดข้อเข่าเบื้องต้น การใช้งานควรอยู่ภายใต้คำแนะนำของแพทย์ หรือนักกายภาพบำบัดผู้เชี่ยวชาญ แพลตฟอร์มไม่ได้รับประกันการหายจากโรคอัมพาตหรือโรคทางระบบประสาท
+                </p>
+            </div>
+            `;
+        }
+
+        function renderNotFoundPage() {
+            return `
+            <div class="text-center py-20 space-y-4">
+                <h1 class="text-6xl font-black text-slate-300">404</h1>
+                <p class="text-lg font-bold text-slate-700">ไม่พบหน้าที่คุณต้องการ</p>
+                <button onclick="navigateTo('home')" class="px-6 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-bold">กลับหน้าแรก</button>
+            </div>
+            `;
+        }
+
+        window.onload = function() {
+            initTTSVoices();
+            renderPage('home');
+            console.log("MOVECARE Platform Initialized Successfully.");
+        };
+    </script>
+</body>
+</html>
